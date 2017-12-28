@@ -21,7 +21,7 @@ class MainActivity : BaseMvpActivity<MainContract.View,
         MainContract.View, NavigationView.OnNavigationItemSelectedListener {
 
 
-    override var mPresenter: MainPresenter = MainPresenter(this)
+    override var mPresenter: MainPresenter = MainPresenter()
     val component by lazy { app.component.plus(MainModule(this)) }
 
 
@@ -63,7 +63,7 @@ class MainActivity : BaseMvpActivity<MainContract.View,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
-                mPresenter.gotToConfiguration()
+                mPresenter.goToConfiguration()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

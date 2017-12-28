@@ -12,7 +12,7 @@ import com.mibaldi.cah.base.presenters.actitivities.BasePresenter
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 
 
-class MainPresenter(val context: MainActivity): BasePresenter<MainContract.View>(), MainContract.Presenter {
+class MainPresenter: BasePresenter<MainContract.View>(), MainContract.Presenter {
 
 
     @Inject
@@ -22,12 +22,17 @@ class MainPresenter(val context: MainActivity): BasePresenter<MainContract.View>
     @Inject
     lateinit var router: Router
 
-    val component by lazy { context.app.component.plus(MainModule(context)) }
+    val component by lazy {
+        val activity = mView?.getMyActivity() as MainActivity
+        activity.let {
+            it.app.component.plus(MainModule(it ))
+        }
+    }
     lateinit var model:MainViewModel
 
 
     private fun observeUser() {
-        model.currentUser.observe(context, Observer { user ->
+        model.currentUser.observe(mView?.getMyActivity() as MainActivity, Observer { user ->
             user?.let {
                 mView?.showCurrentUser(it)
             }
@@ -35,9 +40,14 @@ class MainPresenter(val context: MainActivity): BasePresenter<MainContract.View>
     }
     override fun initializer() {
         component.inject(this)
-        model = ViewModelProviders.of(context).get(MainViewModel::class.java)
+        val activity = mView?.getMyActivity() as MainActivity
+        model = ViewModelProviders.of(activity).get(MainViewModel::class.java)
         model.setCurrentUser("Mikel")
         observeUser()
+    }
+
+    fun goToConfiguration() {
+        router.goToConfiguration()
     }
 
 }

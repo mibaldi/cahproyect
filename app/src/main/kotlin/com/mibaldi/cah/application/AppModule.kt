@@ -24,7 +24,7 @@ class AppModule(val app: App) {
     @Provides
     @Singleton
     fun provideRouter(): Router {
-        val router = Router(app.applicationContext)
+        val router = Router()
         return router
     }
 

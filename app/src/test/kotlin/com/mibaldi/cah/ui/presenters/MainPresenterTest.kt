@@ -18,8 +18,7 @@ class MainPresenterTest {
 
     @Mock lateinit var mockView: MainContract.View
     lateinit var presenter : MainPresenter
-    @InjectMocks lateinit var router: Router
-    @InjectMocks lateinit var app: App
+    lateinit var router: Router
 
 
 
@@ -27,7 +26,7 @@ class MainPresenterTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         presenter = createMockedPresenter()
-        router.mContext = app
+        router= Router(mock<Context>())
         presenter.router = router
 
     }

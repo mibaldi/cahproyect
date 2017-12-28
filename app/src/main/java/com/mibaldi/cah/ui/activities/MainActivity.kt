@@ -7,7 +7,7 @@ import com.mibaldi.cah.ui.presenters.MainModule
 import com.mibaldi.cah.ui.presenters.MainPresenter
 import com.mibaldi.cah.ui.views.MainContract
 import com.mibaldi.cah.utils.app
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main_contain.*
 
 
 class MainActivity : BaseMvpActivity<MainContract.View,

@@ -1,9 +1,8 @@
 package com.mibaldi.cah.ui.activities
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.mibaldi.cah.R
-import com.mibaldi.cah.base.BaseMvpActivity
+import com.mibaldi.cah.base.old.BaseMvpActivity
 import com.mibaldi.cah.ui.presenters.MainModule
 import com.mibaldi.cah.ui.presenters.MainPresenter
 import com.mibaldi.cah.ui.views.MainContract

@@ -1,8 +1,7 @@
 package com.mibaldi.cah.ui.presenters
 
 import android.arch.lifecycle.Observer
-import android.util.Log
-import com.mibaldi.cah.base.BaseMvpPresenterImpl
+import com.mibaldi.cah.base.old.BaseMvpPresenterImpl
 import com.mibaldi.cah.domain.interactors.MainInteractor
 import com.mibaldi.cah.router.Router
 import com.mibaldi.cah.ui.activities.MainActivity

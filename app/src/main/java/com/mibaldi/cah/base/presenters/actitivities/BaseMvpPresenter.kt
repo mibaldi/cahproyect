@@ -1,4 +1,3 @@
-package com.mibaldi.cah.base
 
 
 interface BaseMvpPresenter<in V : BaseMvpView> {

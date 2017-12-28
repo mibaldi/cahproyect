@@ -1,11 +1,5 @@
-package com.mibaldi.cah.base
-
-
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-
-
 
 
 abstract class BaseMvpActivity<in V : BaseMvpView, T : BaseMvpPresenter<V>>
@@ -16,16 +10,16 @@ abstract class BaseMvpActivity<in V : BaseMvpView, T : BaseMvpPresenter<V>>
         mPresenter.attachView(this as V)
     }
 
-    override fun getContext(): Context = this
+    override fun getMyActivity(): AppCompatActivity {
+        return this
+    }
+    abstract var mPresenter: T
 
-    protected abstract var mPresenter: T
 
     override fun onDestroy() {
         super.onDestroy()
         mPresenter.detachView()
     }
 
-
-
-
 }
+

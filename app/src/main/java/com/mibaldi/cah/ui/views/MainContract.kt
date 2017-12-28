@@ -1,7 +1,7 @@
 package com.mibaldi.cah.ui.views
 
-import com.mibaldi.cah.base.BaseMvpPresenter
-import com.mibaldi.cah.base.BaseMvpView
+import com.mibaldi.cah.base.old.BaseMvpPresenter
+import com.mibaldi.cah.base.old.BaseMvpView
 
 object MainContract {
     interface View : BaseMvpView {

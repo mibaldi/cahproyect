@@ -1,5 +1,6 @@
+package com.mibaldi.cah.base.presenters.fragments
 
-
+import com.mibaldi.cah.base.views.BaseMvpFragmentView
 
 
 open class BaseFragmentPresenter<V : BaseMvpFragmentView> : BaseMvpFragmentPresenter<V> {

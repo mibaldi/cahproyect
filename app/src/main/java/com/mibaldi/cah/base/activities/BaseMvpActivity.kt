@@ -1,5 +1,8 @@
+package com.mibaldi.cah.base.activities
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.mibaldi.cah.base.presenters.actitivities.BaseMvpPresenter
+import com.mibaldi.cah.base.views.BaseMvpView
 
 
 abstract class BaseMvpActivity<in V : BaseMvpView, T : BaseMvpPresenter<V>>

@@ -1,3 +1,5 @@
+package com.mibaldi.cah.base.views
+
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 

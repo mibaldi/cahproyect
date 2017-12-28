@@ -1,7 +1,8 @@
 package com.mibaldi.cah.ui.views
 
-import com.mibaldi.cah.base.old.BaseMvpPresenter
-import com.mibaldi.cah.base.old.BaseMvpView
+import com.mibaldi.cah.base.presenters.actitivities.BaseMvpPresenter
+import com.mibaldi.cah.base.views.BaseMvpView
+
 
 object MainContract {
     interface View : BaseMvpView {
@@ -9,6 +10,6 @@ object MainContract {
     }
 
     interface Presenter : BaseMvpPresenter<View> {
-        fun init()
+        fun initializer()
     }
 }

@@ -1,8 +1,10 @@
-
+package com.mibaldi.cah.base.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
+import com.mibaldi.cah.base.presenters.fragments.BaseMvpFragmentPresenter
+import com.mibaldi.cah.base.views.BaseMvpFragmentView
 
 abstract class BaseMvpFragment<in V : BaseMvpFragmentView, T : BaseMvpFragmentPresenter<V>>
     : Fragment(), BaseMvpFragmentView {

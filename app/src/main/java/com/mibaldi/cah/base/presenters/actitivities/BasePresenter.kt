@@ -1,4 +1,6 @@
+package com.mibaldi.cah.base.presenters.actitivities
 
+import com.mibaldi.cah.base.views.BaseMvpView
 
 open class BasePresenter<V : BaseMvpView> : BaseMvpPresenter<V> {
 

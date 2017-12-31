@@ -1,16 +1,14 @@
 package com.mibaldi.cah.application
+import com.mibaldi.cah.application.di.DaggerAppComponent
+import dagger.android.AndroidInjector
+import dagger.android.support.DaggerApplication
 
-class App: android.app.Application() {
 
-   val component: AppComponent by lazy {
 
-        DaggerAppComponent
-                .builder()
-                .appModule(AppModule(this))
-                .build()
-    }
-    override fun onCreate(){
-        super.onCreate()
-        component.inject(this)
+class App: DaggerApplication() {
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        val appComponent = DaggerAppComponent.builder().application(this).build()
+        appComponent.inject(this)
+        return appComponent
     }
 }

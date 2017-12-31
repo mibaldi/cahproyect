@@ -1,38 +1,33 @@
 package com.mibaldi.cah.ui.presenters.configuration
 
-import com.mibaldi.cah.domain.interactors.MainInteractor
+import android.arch.lifecycle.ViewModelProviders
 import com.mibaldi.cah.router.Router
-import com.mibaldi.cah.utils.app
 import javax.inject.Inject
 import com.mibaldi.cah.base.presenters.activities.BasePresenter
+import com.mibaldi.cah.domain.interactors.configuration.ConfigurationInteractor
 import com.mibaldi.cah.ui.activities.ConfigurationActivity
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.ConfigurationContract
+import com.mibaldi.cah.utils.ViewModelFactory
 
 
-class ConfigurationPresenter: BasePresenter<ConfigurationContract.View>(), ConfigurationContract.Presenter {
-
-
-    @Inject
-    lateinit var interactor: MainInteractor
-
-
-    @Inject
-    lateinit var router: Router
-
-    val component by lazy {
-        val activity = mView?.getMyActivity() as ConfigurationActivity
-        activity.let {
-            it.app.component.plus(ConfigurationModule(it))
-        }
-    }
-    lateinit var model:MainViewModel
-
+class ConfigurationPresenter @Inject constructor(val router: Router, val configurationInteractor:ConfigurationInteractor,val viewModelFactory: ViewModelFactory): BasePresenter<ConfigurationContract.View>(), ConfigurationContract.Presenter {
 
     override fun initializer() {
-        component.inject(this)
 
     }
-
+    override fun changeUsername(username: String) {
+        mView?.showProgress()
+        configurationInteractor.changeUsername(username,{result ->
+            if (result.second != null){
+                mView?.showError(result.second?.message)
+            }else {
+                val activity = mView?.getMyActivity() as ConfigurationActivity
+                val model = ViewModelProviders.of(activity,viewModelFactory).get(MainViewModel::class.java)
+                model.setCurrentUser(result.first!!)
+                router.closeActivity(mView?.getMyActivity()!!)
+            }
+        })
+    }
 
 }

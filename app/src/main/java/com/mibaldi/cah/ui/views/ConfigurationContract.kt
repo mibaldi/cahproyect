@@ -6,9 +6,13 @@ import com.mibaldi.cah.base.views.BaseMvpView
 
 object ConfigurationContract {
     interface View : BaseMvpView {
+        fun showProgress()
+        fun hideProgress()
+        fun showError(message: String?)
     }
 
     interface Presenter : BaseMvpPresenter<View> {
         fun initializer()
+        fun changeUsername(username: String)
     }
 }

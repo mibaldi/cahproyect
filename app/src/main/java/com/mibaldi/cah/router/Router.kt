@@ -1,20 +1,24 @@
 package com.mibaldi.cah.router
 
 import android.content.Context
-import android.content.Intent
-import android.util.Log
+import android.support.v7.app.AppCompatActivity
 import com.mibaldi.cah.ui.activities.ConfigurationActivity
-import com.mibaldi.cah.ui.activities.MainActivity
-import org.jetbrains.anko.clearTask
+import dagger.android.DaggerActivity
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
-import org.jetbrains.anko.startActivity
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class Router(val applicationContext:Context){
+@Singleton
+class Router @Inject constructor(val applicationContext:Context){
+
     fun goToConfiguration() {
         with(applicationContext){
             startActivity(intentFor<ConfigurationActivity>().newTask())
         }
+    }
+    fun closeActivity(activity: AppCompatActivity){
+        activity.finish()
     }
 
 }

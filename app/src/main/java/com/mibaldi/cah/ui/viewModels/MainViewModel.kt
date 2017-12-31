@@ -5,7 +5,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 
 
-class MainViewModel : ViewModel() {
+
+class MainViewModel: ViewModel() {
+
     var currentUser = MutableLiveData<String>()
     fun getCurrentUser(): LiveData<String> {
         return currentUser
@@ -13,4 +15,5 @@ class MainViewModel : ViewModel() {
     fun setCurrentUser(user: String){
         currentUser.value = user
     }
+
 }

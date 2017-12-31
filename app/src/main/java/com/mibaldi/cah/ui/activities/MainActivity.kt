@@ -8,12 +8,15 @@ import android.view.Menu
 import android.view.MenuItem
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
-import com.mibaldi.cah.ui.presenters.main.MainModule
 import com.mibaldi.cah.ui.presenters.main.MainPresenter
 import com.mibaldi.cah.ui.views.MainContract
-import com.mibaldi.cah.utils.app
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_contain.*
+import org.jetbrains.anko.design.longSnackbar
+import org.jetbrains.anko.design.snackbar
+
+
+import javax.inject.Inject
 
 
 class MainActivity : BaseMvpActivity<MainContract.View,
@@ -21,14 +24,13 @@ class MainActivity : BaseMvpActivity<MainContract.View,
         MainContract.View, NavigationView.OnNavigationItemSelectedListener {
 
 
-    override var mPresenter: MainPresenter = MainPresenter()
-    val component by lazy { app.component.plus(MainModule(this)) }
+    @Inject
+    override lateinit var mPresenter: MainPresenter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        component.inject(this)
         mPresenter.initializer()
         setupToolbar()
     }
@@ -41,6 +43,7 @@ class MainActivity : BaseMvpActivity<MainContract.View,
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+
 
         nav_view.setNavigationItemSelectedListener(this)
     }
@@ -79,5 +82,9 @@ class MainActivity : BaseMvpActivity<MainContract.View,
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+    override fun showError(message: String?) {
+        longSnackbar(llMain,message!!)
+
     }
 }

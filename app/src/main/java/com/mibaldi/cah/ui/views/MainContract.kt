@@ -7,6 +7,7 @@ import com.mibaldi.cah.base.views.BaseMvpView
 object MainContract {
     interface View : BaseMvpView {
         fun showCurrentUser(user:String)
+        fun showError(message: String?)
     }
 
     interface Presenter : BaseMvpPresenter<View> {

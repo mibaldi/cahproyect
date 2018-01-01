@@ -22,8 +22,8 @@ abstract class MainModule {
     companion object {
         @JvmStatic
         @Provides
-        fun provideMainPresenter(router: Router, interactor: MainInteractor,viewModelFactory: ViewModelFactory): MainPresenter {
-            return MainPresenter(router, interactor,viewModelFactory)
+        fun provideMainPresenter(router: Router, interactor: MainInteractor): MainPresenter {
+            return MainPresenter(router, interactor)
         }
         @JvmStatic
         @Provides

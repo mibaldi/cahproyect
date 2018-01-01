@@ -21,8 +21,8 @@ abstract class ConfigurationModule {
     companion object {
         @JvmStatic
         @Provides
-        fun provideConfigurationPresenter(router: Router,interactor: ConfigurationInteractor,viewModelFactory: ViewModelFactory): ConfigurationPresenter {
-            return ConfigurationPresenter(router,interactor,viewModelFactory)
+        fun provideConfigurationPresenter(router: Router,interactor: ConfigurationInteractor): ConfigurationPresenter {
+            return ConfigurationPresenter(router,interactor)
         }
         @JvmStatic
         @Provides

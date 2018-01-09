@@ -2,6 +2,7 @@ package com.mibaldi.cah.router
 
 import android.content.Context
 import com.mibaldi.cah.ui.activities.ConfigurationActivity
+import com.mibaldi.cah.ui.activities.NewGameActivity
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
 import java.lang.ref.WeakReference
@@ -18,5 +19,11 @@ class Router @Inject constructor(val applicationContext:Context){
     }
     fun  closeActivity(weakReference: WeakReference<ConfigurationActivity>) {
         weakReference.get()?.finish()
+    }
+
+    fun goToNewGame() {
+        with(applicationContext){
+            startActivity(intentFor<NewGameActivity>().newTask())
+        }
     }
 }

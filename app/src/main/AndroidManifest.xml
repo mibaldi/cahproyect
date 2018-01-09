@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".ui.activities.ConfigurationActivity"
             android:parentActivityName=".ui.activities.MainActivity"/>
+        <activity android:name=".ui.activities.NewGameActivity"
+            android:parentActivityName=".ui.activities.MainActivity"/>
     </application>
 
 </manifest>

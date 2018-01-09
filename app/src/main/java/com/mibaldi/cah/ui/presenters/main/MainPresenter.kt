@@ -30,6 +30,10 @@ class MainPresenter @Inject constructor(val router: Router,val interactor: MainI
     fun goToConfiguration() {
         router.goToConfiguration()
     }
+
+    fun goToNewGame() {
+        router.goToNewGame()
+    }
     override fun getCurrentUser() {
         model.setCurrentUser("Mikel2")
         interactor.getCurrentPlayer { result ->

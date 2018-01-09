@@ -4,11 +4,11 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <!--<item
-            android:id="@+id/nav_ownworkstation"
-            android:icon=""
-            android:title="Mi puesto" />
         <item
+            android:id="@+id/nav_newGame"
+            android:icon="@drawable/ic_launcher_foreground"
+            android:title="@string/new_game" />
+        <!--<item
             android:id="@+id/nav_workstationlist"
             android:icon="@drawable/ic_menu_workstationlist"
             android:title="Puestos disponibles" />-->

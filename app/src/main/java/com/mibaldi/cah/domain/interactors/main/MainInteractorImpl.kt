@@ -6,7 +6,7 @@ import com.mibaldi.cah.data.repositories.UserRepository
 
 class MainInteractorImpl(val userRepository: UserRepository,val gameRepository: GameRepository) : MainInteractor {
     override fun getAllPlays() {
-        gameRepository.getAllPlays()
+        gameRepository.getAllGames()
     }
 
     override fun getCurrentPlayer(param: (Pair<String?,Error?>) -> Unit) {

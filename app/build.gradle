@@ -43,6 +43,9 @@ dependencies {
     implementation "org.jetbrains.anko:anko-design:$anko_version"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
+    // Firebase
+    implementation "com.google.firebase:firebase-core:$firebase_version"
+    implementation "com.google.firebase:firebase-database:$firebase_version"
 
 
     // Dagger dependencies
@@ -70,3 +73,5 @@ kotlin {
         coroutines "enable"
     }
 }
+
+apply plugin: 'com.google.gms.google-services'

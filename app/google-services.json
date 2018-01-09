@@ -1,0 +1,104 @@
+{
+  "project_info": {
+    "project_number": "530868419585",
+    "firebase_url": "https://cardsagainsthumanity-489dc.firebaseio.com",
+    "project_id": "cardsagainsthumanity-489dc",
+    "storage_bucket": "cardsagainsthumanity-489dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:530868419585:android:047184e8c4722525",
+        "android_client_info": {
+          "package_name": "com.mibaldi.pruebacambioestado"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "530868419585-c1nelgd7hb1getejprr1dlbs352m79a0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3XwEkA76_mGPqH124tgLchpvq-zYhtds"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:530868419585:android:71ab8ca156634929",
+        "android_client_info": {
+          "package_name": "com.mibaldi.pruebacreacionjuego"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "530868419585-c1nelgd7hb1getejprr1dlbs352m79a0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3XwEkA76_mGPqH124tgLchpvq-zYhtds"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:530868419585:android:7cad9df2d2ddb7bf",
+        "android_client_info": {
+          "package_name": "com.mibaldi.cah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "530868419585-c1nelgd7hb1getejprr1dlbs352m79a0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3XwEkA76_mGPqH124tgLchpvq-zYhtds"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

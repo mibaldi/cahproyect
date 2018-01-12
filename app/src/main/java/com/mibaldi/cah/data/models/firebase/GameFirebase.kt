@@ -1,3 +1,7 @@
 package com.mibaldi.cah.data.models.firebase
 
-data class GameFirebase(var nombre : String, var config : GameConfigFirebase)
+import com.mibaldi.cah.data.models.Game
+
+data class GameFirebase(var nombre : String, var config : GameConfigFirebase) {
+    fun toGame() = Game(nombre, config.numCartasJugador, config.numJugadores, config.rondas)
+}

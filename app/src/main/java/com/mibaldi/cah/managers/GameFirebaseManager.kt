@@ -24,17 +24,33 @@ class GameFirebaseManager @Inject constructor(){
     }
 
 
-    fun newGame(game : Game) : Observable<String>{
+    fun newGame(game: Game, subscriber: Observer<String>){
         val key = gameRef.push().key
         gameRef.child(key).setValue(game.toGameFirebase())
-        return Observable.create<String> {
-            it.onNext(key)
-            it.onComplete()
-        }
+                .addOnCompleteListener { task ->
+                    if(task.isSuccessful){
+                        gameRef.child("$key/estado").addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                when(dataSnapshot.value){
+                                    1L -> {
+                                        gameRef.child("$key/estado").removeEventListener(this)
+                                        subscriber.onNext(key)
+                                        subscriber.onComplete()
+                                    }
+                                    else -> subscriber.onError(Error("Juego no preparado"))
+                                }
+                            }
+
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                subscriber.onError(Error("Juego no preparado"))
+                            }
+                        })
+                    }
+                }
     }
 
     fun addPlayer(key: String,player: Player,subscriber: Observer<Boolean>) {
-        gameRef.child(key).child("${refPlayers}/${player.username}").setValue(player.toPlayerFirebase())
+        gameRef.child(key).child("$refPlayers/${player.username}").setValue(player.toPlayerFirebase())
                 .addOnCompleteListener{ task ->
                     subscriber.onNext(task.isSuccessful)
                 }
@@ -44,7 +60,7 @@ class GameFirebaseManager @Inject constructor(){
         gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).addListenerForSingleValueEvent (object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 dataSnapshot.children.forEach {
-                    gameRef.child(gameKey).child(refRounds).child(it.key).child("estado").setValue(1)
+                    gameRef.child(gameKey).child(refRounds).child(it.key).child("estado").setValue(0)
                 }
 
             }
@@ -58,7 +74,7 @@ class GameFirebaseManager @Inject constructor(){
         gameRef.child(gameKey).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 when(dataSnapshot.child("estado").value){
-                    1L -> {
+                    3L -> {
                         gameRef.child(gameKey).removeEventListener(this)
                         subscriber.onComplete()
                     }

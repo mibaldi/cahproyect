@@ -1,7 +1,6 @@
 package com.mibaldi.cah.ui.presenters.newGame
 
 import android.util.Log
-import com.google.android.gms.tasks.Task
 import com.mibaldi.cah.base.presenters.activities.BasePresenter
 import com.mibaldi.cah.data.models.Game
 import com.mibaldi.cah.data.models.Player
@@ -10,7 +9,6 @@ import com.mibaldi.cah.router.Router
 import com.mibaldi.cah.ui.views.NewGameContract
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
 class NewGamePresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BasePresenter<NewGameContract.View>(), NewGameContract.Presenter {
@@ -36,7 +34,7 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
             }
 
         }
-        gameManager.newGame(Game("miJuego")).subscribe(observer)
+        gameManager.newGame(Game("miJuego"),observer)
     }
 
 

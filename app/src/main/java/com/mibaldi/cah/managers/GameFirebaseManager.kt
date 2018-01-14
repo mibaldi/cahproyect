@@ -29,22 +29,7 @@ class GameFirebaseManager @Inject constructor(){
         gameRef.child(key).setValue(game.toGameFirebase())
                 .addOnCompleteListener { task ->
                     if(task.isSuccessful){
-                        gameRef.child("$key/estado").addValueEventListener(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                when(dataSnapshot.value){
-                                    1L -> {
-                                        gameRef.child("$key/estado").removeEventListener(this)
-                                        subscriber.onNext(key)
-                                        subscriber.onComplete()
-                                    }
-                                    else -> subscriber.onError(Error("Juego no preparado"))
-                                }
-                            }
-
-                            override fun onCancelled(databaseError: DatabaseError) {
-                                subscriber.onError(Error("Juego no preparado"))
-                            }
-                        })
+                        this.isGamePrepared(key,subscriber)
                     }
                 }
     }
@@ -70,10 +55,15 @@ class GameFirebaseManager @Inject constructor(){
             }
         })
     }
-    fun isGamePrepared(gameKey: String,subscriber: Observer<Boolean>){
+    fun isGamePrepared(gameKey: String,subscriber: Observer<String>){
         gameRef.child(gameKey).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 when(dataSnapshot.child("estado").value){
+                    1L -> {
+                        gameRef.child(gameKey).removeEventListener(this)
+                        subscriber.onNext(gameKey)
+                        subscriber.onComplete()
+                    }
                     3L -> {
                         gameRef.child(gameKey).removeEventListener(this)
                         subscriber.onComplete()

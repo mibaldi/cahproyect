@@ -41,7 +41,7 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
     fun addPlayer(player: Player){
         val observer  = object : Observer<Boolean>{
             override fun onNext(t: Boolean) {
-                Log.d("AddPlayer","Juego creado ${t}")
+                Log.d("AddPlayer","Juego creado $t")
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -60,7 +60,7 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
     }
 
     fun initGame(){
-        gameManager.isGamePrepared(mKey,object : Observer<Boolean>{
+        gameManager.isGamePrepared(mKey,object : Observer<String>{
             override fun onComplete() {
                 if (mKey.isNotEmpty()){
                     gameManager.startRound(mKey)
@@ -73,8 +73,8 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
                 Log.d("isGamePrepared","Subscripcion Juego preparado ${d.isDisposed}")
             }
 
-            override fun onNext(t: Boolean) {
-                Log.d("isGamePrepared","Juego preparado ${t}")
+            override fun onNext(t: String) {
+                Log.d("isGamePrepared","Juego preparado $t")
             }
         })
     }

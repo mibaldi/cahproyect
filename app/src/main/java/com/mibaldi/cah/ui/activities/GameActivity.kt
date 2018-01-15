@@ -5,9 +5,7 @@ import android.view.View
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
 import com.mibaldi.cah.ui.presenters.game.GamePresenter
-import com.mibaldi.cah.ui.presenters.newGame.NewGamePresenter
 import com.mibaldi.cah.ui.views.GameContract
-import com.mibaldi.cah.ui.views.NewGameContract
 import kotlinx.android.synthetic.main.activity_game.*
 import org.jetbrains.anko.design.longSnackbar
 import javax.inject.Inject
@@ -23,7 +21,10 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         setupToolbar()
-        mPresenter.initialize()
+        val idGame = intent.getStringExtra("idGame")
+        mPresenter.initialize(idGame)
+        btnShared.setOnClickListener { mPresenter.sharedWhatsapp() }
+
     }
 
     private fun setupToolbar() {
@@ -43,6 +44,10 @@ class GameActivity : BaseMvpActivity<GameContract.View,
 
     override fun showError(message: String?) {
         message?.let { longSnackbar(llConfiguration, it) }
+    }
+
+    override fun changeNumPlayers(it: Long) {
+        tvCurrentPlayers.text = "$it jugadores"
     }
 
 

@@ -1,7 +1,6 @@
 package com.mibaldi.cah.ui.activities
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -11,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
+import com.mibaldi.cah.ui.dialogs.JoinGameDialog
 import com.mibaldi.cah.ui.presenters.main.MainPresenter
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.MainContract
@@ -18,7 +18,6 @@ import com.mibaldi.cah.utils.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_contain.*
 import org.jetbrains.anko.design.longSnackbar
-import org.jetbrains.anko.design.snackbar
 
 
 import javax.inject.Inject
@@ -27,7 +26,6 @@ import javax.inject.Inject
 class MainActivity : BaseMvpActivity<MainContract.View,
         MainPresenter>(),
         MainContract.View, NavigationView.OnNavigationItemSelectedListener {
-
 
 
     @Inject
@@ -87,6 +85,8 @@ class MainActivity : BaseMvpActivity<MainContract.View,
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_newGame -> { mPresenter.goToNewGame()}
+            R.id.nav_joinGame -> { mPresenter.showJoinGameAlert()
+            }
             /*R.id.nav_ownworkstation -> { mPresenter.goToManageOwnWorkstation() }
             R.id.nav_workstationlist -> { mPresenter.goToFillWorkstation() }
             R.id.nav_share -> {}
@@ -100,5 +100,11 @@ class MainActivity : BaseMvpActivity<MainContract.View,
     }
     override fun observeUser(observer: Observer<String>) {
         model.currentUser.observe(this,observer)
+    }
+
+    override fun alertJoinGame() {
+        JoinGameDialog.newInstance(this,"Introduce clave:"){
+            mKey -> mPresenter.joinGame(mKey)
+        }
     }
 }

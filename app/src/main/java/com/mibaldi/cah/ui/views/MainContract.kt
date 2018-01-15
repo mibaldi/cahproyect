@@ -11,10 +11,14 @@ object MainContract {
         fun showCurrentUser(user:String)
         fun showError(message: String?)
         fun observeUser(observer:Observer<String>)
+        fun alertJoinGame()
     }
 
     interface Presenter : BaseMvpPresenter<View> {
         fun  initializer(viewModel: ViewModel)
         fun getCurrentUser()
+        fun joinGame(mKey: String)
+        fun showJoinGameAlert()
+
     }
 }

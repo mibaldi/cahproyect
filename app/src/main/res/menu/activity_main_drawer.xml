@@ -8,10 +8,10 @@
             android:id="@+id/nav_newGame"
             android:icon="@drawable/ic_launcher_foreground"
             android:title="@string/new_game" />
-        <!--<item
-            android:id="@+id/nav_workstationlist"
-            android:icon="@drawable/ic_menu_workstationlist"
-            android:title="Puestos disponibles" />-->
+        <item
+            android:id="@+id/nav_joinGame"
+            android:icon="@drawable/ic_launcher_foreground"
+            android:title="Unirse a juego" />
     </group>
 
     <item android:title="Communicate">

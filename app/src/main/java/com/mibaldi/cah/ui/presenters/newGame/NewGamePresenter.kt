@@ -6,17 +6,10 @@ import com.mibaldi.cah.data.models.Game
 import com.mibaldi.cah.data.models.Player
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
-import com.mibaldi.cah.ui.activities.NewGameActivity
 import com.mibaldi.cah.ui.views.NewGameContract
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.okButton
 import javax.inject.Inject
-import android.support.v4.content.ContextCompat.startActivity
-import android.content.Intent
-import android.support.v7.app.AppCompatActivity
-import org.jetbrains.anko.toast
 
 
 class NewGamePresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BasePresenter<NewGameContract.View>(), NewGameContract.Presenter {
@@ -46,7 +39,7 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
     }
 
     override fun goToGameActivity() {
-        router.gotToGame()
+        router.gotToGame(mKey)
     }
 
     fun addPlayer(player: Player){

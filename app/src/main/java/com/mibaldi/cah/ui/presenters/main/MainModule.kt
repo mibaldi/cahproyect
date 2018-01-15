@@ -5,6 +5,7 @@ import com.mibaldi.cah.data.repositories.GameRepository
 import com.mibaldi.cah.data.repositories.UserRepository
 import com.mibaldi.cah.domain.interactors.main.MainInteractor
 import com.mibaldi.cah.domain.interactors.main.MainInteractorImpl
+import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
 import dagger.Binds
 import dagger.Module
@@ -22,8 +23,8 @@ abstract class MainModule {
     companion object {
         @JvmStatic
         @Provides
-        fun provideMainPresenter(router: Router, interactor: MainInteractor): MainPresenter {
-            return MainPresenter(router, interactor)
+        fun provideMainPresenter(router: Router, interactor: MainInteractor, gameManager : GameFirebaseManager): MainPresenter {
+            return MainPresenter(router, interactor, gameManager)
         }
         @JvmStatic
         @Provides

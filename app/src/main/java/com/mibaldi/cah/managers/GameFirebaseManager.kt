@@ -8,6 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
+import com.mibaldi.cah.data.models.firebase.PlayerFirebase
 import io.reactivex.Observable
 import io.reactivex.Observer
 
@@ -55,6 +56,20 @@ class GameFirebaseManager @Inject constructor(){
             }
         })
     }
+
+    fun getNumPlayers(gameKey: String,subscriber: Observer<Long>){
+        gameRef.child(gameKey).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var numPlayers = dataSnapshot.child("jugadores").childrenCount
+                subscriber.onNext(numPlayers)
+
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                subscriber.onError(Error(databaseError.message))
+            }
+        })
+    }
+
     fun isGamePrepared(gameKey: String,subscriber: Observer<String>){
         gameRef.child(gameKey).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

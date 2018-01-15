@@ -2,20 +2,19 @@ package com.mibaldi.cah.ui.presenters.main
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProviders
+import android.util.Log
 import com.mibaldi.cah.base.presenters.activities.BasePresenter
+import com.mibaldi.cah.data.models.Player
 import com.mibaldi.cah.domain.interactors.main.MainInteractor
+import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
-import com.mibaldi.cah.ui.activities.MainActivity
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.MainContract
-import com.mibaldi.cah.utils.ViewModelFactory
-import org.jetbrains.anko.design.snackbar
+import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 
-class MainPresenter @Inject constructor(val router: Router,val interactor: MainInteractor): BasePresenter<MainContract.View>(), MainContract.Presenter {
-
+class MainPresenter @Inject constructor(val router: Router,val interactor: MainInteractor, val gameManager: GameFirebaseManager): BasePresenter<MainContract.View>(), MainContract.Presenter {
 
     lateinit var model:MainViewModel
     val observer= Observer<String> { user -> user?.let {
@@ -46,6 +45,31 @@ class MainPresenter @Inject constructor(val router: Router,val interactor: MainI
             }
         }
         interactor.getAllPlays()
+    }
+
+    override fun joinGame(mKey : String) {
+        val observer  = object : io.reactivex.Observer<Boolean> {
+            override fun onNext(t: Boolean) {
+                Log.d("AddPlayer","Juego creado $t")
+                router.gotToGame(mKey)
+            }
+
+            override fun onSubscribe(d: Disposable) {
+                Log.d("Subscriber","New Subscriber")
+            }
+
+            override fun onError(e: Throwable) {
+                Log.d("Subscriber",e.message)
+            }
+
+            override fun onComplete() {
+            }
+        }
+        gameManager.addPlayer(mKey, Player("Pablo"),observer)
+    }
+
+    override fun showJoinGameAlert() {
+        mView?.alertJoinGame()
     }
 
 }

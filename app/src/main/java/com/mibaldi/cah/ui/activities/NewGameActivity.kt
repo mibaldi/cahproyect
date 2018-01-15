@@ -25,7 +25,6 @@ class NewGameActivity : BaseMvpActivity<NewGameContract.View,
         setContentView(R.layout.activity_newgame)
         setupToolbar()
         btn_newGame.onClick { mPresenter.createGame()}
-        btnInitGame.setOnClickListener{mPresenter.initGame()}
     }
 
     private fun setupToolbar() {

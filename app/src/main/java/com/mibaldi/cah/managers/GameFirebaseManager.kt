@@ -56,11 +56,27 @@ class GameFirebaseManager @Inject constructor(){
             }
         })
     }
+    fun whoIsRoundPlayer(gameKey: String,subscriber: Observer<String>){
+        gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).addValueEventListener (object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach {
+                    gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).removeEventListener(this)
+                    val narrator = it.child("narrador").value as String
+                    subscriber.onNext(narrator)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                //Handle possible errors.
+            }
+        })
+    }
 
     fun getNumPlayers(gameKey: String,subscriber: Observer<Long>){
         gameRef.child(gameKey).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var numPlayers = dataSnapshot.child("jugadores").childrenCount
+
                 subscriber.onNext(numPlayers)
 
             }

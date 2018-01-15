@@ -14,6 +14,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         GamePresenter>(),
         GameContract.View {
 
+
     @Inject
     override lateinit var mPresenter : GamePresenter
 
@@ -24,6 +25,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         val idGame = intent.getStringExtra("idGame")
         mPresenter.initialize(idGame)
         btnShared.setOnClickListener { mPresenter.sharedWhatsapp() }
+        btnInitGame.setOnClickListener{ mPresenter.changeStateRound() }
 
     }
 
@@ -48,6 +50,10 @@ class GameActivity : BaseMvpActivity<GameContract.View,
 
     override fun changeNumPlayers(it: Long) {
         tvCurrentPlayers.text = "$it jugadores"
+    }
+
+    override fun showButton() {
+        btnInitGame.visibility = View.VISIBLE
     }
 
 

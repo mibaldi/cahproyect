@@ -63,24 +63,6 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
         gameManager.addPlayer(mKey, player,observer)
     }
 
-    fun initGame(){
-        gameManager.isGamePrepared(mKey,object : Observer<String>{
-            override fun onComplete() {
-                if (mKey.isNotEmpty()){
-                    gameManager.startRound(mKey)
-                }
-            }
-            override fun onError(e: Throwable) {
-                Log.d("isGamePrepared","Error ${e.message}")
-            }
-            override fun onSubscribe(d: Disposable) {
-                Log.d("isGamePrepared","Subscripcion Juego preparado ${d.isDisposed}")
-            }
 
-            override fun onNext(t: String) {
-                Log.d("isGamePrepared","Juego preparado $t")
-            }
-        })
-    }
 
 }

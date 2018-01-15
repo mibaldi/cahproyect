@@ -9,9 +9,11 @@ object GameContract {
         fun hideProgress()
         fun showError(message: String?)
         fun changeNumPlayers(it: Long)
+        fun showButton()
     }
 
     interface Presenter : BaseMvpPresenter<View> {
         fun initialize(idGame: String)
+        fun changeStateRound()
     }
 }

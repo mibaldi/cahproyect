@@ -38,10 +38,51 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
 
         }
         gameManager.getNumPlayers(mIdGame,observer)
+        initGame()
     }
 
     fun sharedWhatsapp(){
         router.sharedWhatsapp(mIdGame)
     }
+    fun initGame(){
+        gameManager.whoIsRoundPlayer(mIdGame,object : Observer<String>{
+            override fun onSubscribe(d: Disposable) {
+                Log.d("Subscriber","New Subscriber")
+            }
 
+            override fun onComplete() {
+            }
+
+            override fun onError(e: Throwable) {
+            }
+
+            override fun onNext(username: String) {
+                if(username == "Mikel"){
+                    gameManager.isGamePrepared(mIdGame,object : Observer<String>{
+                        override fun onComplete() {
+                            mView?.showButton()
+                        }
+                        override fun onError(e: Throwable) {
+                            Log.d("isGamePrepared","Error ${e.message}")
+                        }
+                        override fun onSubscribe(d: Disposable) {
+                            Log.d("isGamePrepared","Subscripcion Juego preparado ${d.isDisposed}")
+                        }
+
+                        override fun onNext(t: String) {
+                            Log.d("isGamePrepared","Juego preparado $t")
+                        }
+                    })
+                }
+            }
+
+        })
+
+    }
+    override fun changeStateRound(){
+
+        if (mIdGame.isNotEmpty()){
+            gameManager.startRound(mIdGame)
+        }
+    }
 }

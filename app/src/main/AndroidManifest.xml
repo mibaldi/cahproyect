@@ -21,6 +21,8 @@
             android:parentActivityName=".ui.activities.MainActivity"/>
         <activity android:name=".ui.activities.NewGameActivity"
             android:parentActivityName=".ui.activities.MainActivity"/>
+        <activity android:name=".ui.activities.GameActivity"
+            android:parentActivityName=".ui.activities.NewGameActivity"/>
     </application>
 
 </manifest>

@@ -21,13 +21,6 @@ import org.jetbrains.anko.toast
 
 class NewGamePresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BasePresenter<NewGameContract.View>(), NewGameContract.Presenter {
 
-    lateinit var activity : AppCompatActivity
-
-
-    override fun initialize() {
-        activity = mView as NewGameActivity
-    }
-
     var mKey :String = ""
     override fun createGame() {
         val observer : Observer<String> = object : Observer<String>{
@@ -55,20 +48,6 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
     override fun goToGameActivity() {
         router.gotToGame()
     }
-
-    /*fun sharedWhatsapp(){
-        val whatsappIntent = Intent(Intent.ACTION_SEND)
-        whatsappIntent.type = "text/plain"
-        whatsappIntent.`package` = "com.whatsapp"
-        whatsappIntent.putExtra(Intent.EXTRA_TEXT, mKey)
-        try {
-            activity.startActivity(whatsappIntent)
-        } catch (ex: android.content.ActivityNotFoundException) {
-            activity.toast("Whatsapp have not been installed.").show()
-        }
-
-    }*/
-
 
     fun addPlayer(player: Player){
         val observer  = object : Observer<Boolean>{

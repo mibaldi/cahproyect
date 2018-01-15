@@ -2,6 +2,7 @@ package com.mibaldi.cah.router
 
 import android.content.Context
 import com.mibaldi.cah.ui.activities.ConfigurationActivity
+import com.mibaldi.cah.ui.activities.GameActivity
 import com.mibaldi.cah.ui.activities.NewGameActivity
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
@@ -28,6 +29,8 @@ class Router @Inject constructor(val applicationContext:Context){
     }
 
     fun gotToGame() {
-
+        with(applicationContext){
+            startActivity(intentFor<GameActivity>().newTask())
+        }
     }
 }

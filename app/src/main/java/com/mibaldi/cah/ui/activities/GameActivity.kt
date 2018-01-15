@@ -4,28 +4,26 @@ import android.os.Bundle
 import android.view.View
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
+import com.mibaldi.cah.ui.presenters.game.GamePresenter
 import com.mibaldi.cah.ui.presenters.newGame.NewGamePresenter
+import com.mibaldi.cah.ui.views.GameContract
 import com.mibaldi.cah.ui.views.NewGameContract
-import kotlinx.android.synthetic.main.activity_newgame.*
-import org.jetbrains.anko.alert
+import kotlinx.android.synthetic.main.activity_game.*
 import org.jetbrains.anko.design.longSnackbar
-import org.jetbrains.anko.okButton
-import org.jetbrains.anko.sdk25.coroutines.onClick
 import javax.inject.Inject
 
-class NewGameActivity : BaseMvpActivity<NewGameContract.View,
-        NewGamePresenter>(),
-        NewGameContract.View {
+class GameActivity : BaseMvpActivity<GameContract.View,
+        GamePresenter>(),
+        GameContract.View {
 
     @Inject
-    override lateinit var mPresenter : NewGamePresenter
+    override lateinit var mPresenter : GamePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_newgame)
+        setContentView(R.layout.activity_game)
         setupToolbar()
-        btn_newGame.onClick { mPresenter.createGame()}
-        btnInitGame.setOnClickListener{mPresenter.initGame()}
+        mPresenter.initialize()
     }
 
     private fun setupToolbar() {
@@ -47,12 +45,6 @@ class NewGameActivity : BaseMvpActivity<NewGameContract.View,
         message?.let { longSnackbar(llConfiguration, it) }
     }
 
-    override fun showSharedAlert() {
-        alert("Juego creado") {
-            okButton {
-                mPresenter.goToGameActivity()
-            }
-        }.show()
-    }
+
 
 }

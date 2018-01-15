@@ -26,4 +26,8 @@ class Router @Inject constructor(val applicationContext:Context){
             startActivity(intentFor<NewGameActivity>().newTask())
         }
     }
+
+    fun gotToGame() {
+
+    }
 }

@@ -6,12 +6,27 @@ import com.mibaldi.cah.data.models.Game
 import com.mibaldi.cah.data.models.Player
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
+import com.mibaldi.cah.ui.activities.NewGameActivity
 import com.mibaldi.cah.ui.views.NewGameContract
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.okButton
 import javax.inject.Inject
+import android.support.v4.content.ContextCompat.startActivity
+import android.content.Intent
+import android.support.v7.app.AppCompatActivity
+import org.jetbrains.anko.toast
+
 
 class NewGamePresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BasePresenter<NewGameContract.View>(), NewGameContract.Presenter {
+
+    lateinit var activity : AppCompatActivity
+
+
+    override fun initialize() {
+        activity = mView as NewGameActivity
+    }
 
     var mKey :String = ""
     override fun createGame() {
@@ -30,12 +45,29 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
 
             override fun onComplete() {
                 addPlayer(Player("Mikel"))
-                addPlayer(Player("Pabjimcas"))
+                mView?.showSharedAlert()
             }
 
         }
         gameManager.newGame(Game("miJuego"),observer)
     }
+
+    override fun goToGameActivity() {
+        router.gotToGame()
+    }
+
+    /*fun sharedWhatsapp(){
+        val whatsappIntent = Intent(Intent.ACTION_SEND)
+        whatsappIntent.type = "text/plain"
+        whatsappIntent.`package` = "com.whatsapp"
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, mKey)
+        try {
+            activity.startActivity(whatsappIntent)
+        } catch (ex: android.content.ActivityNotFoundException) {
+            activity.toast("Whatsapp have not been installed.").show()
+        }
+
+    }*/
 
 
     fun addPlayer(player: Player){

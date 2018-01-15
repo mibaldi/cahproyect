@@ -8,9 +8,12 @@ object NewGameContract {
         fun showProgress()
         fun hideProgress()
         fun showError(message: String?)
+        fun showSharedAlert()
     }
 
     interface Presenter : BaseMvpPresenter<View> {
+        fun initialize()
         fun createGame()
+        fun goToGameActivity()
     }
 }

@@ -17,7 +17,13 @@ class JoinGameDialog {
                     .setTitle(title)
                     .setCancelable(false)
                     .setPositiveButton("OK", { dialog, whichButton ->
-                        callback(dialogView.etJoinGame.text.toString())
+                        val text = dialogView.etJoinGame.text.toString()
+                        if (text.isNotEmpty()){
+                            callback(text)
+                            dialog.dismiss()
+                        }
+                    })
+                    .setNegativeButton("Cancelar", { dialog, whichButton ->
                         dialog.dismiss()
                     })
                     .create()

@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import com.mibaldi.cah.base.presenters.activities.BaseMvpPresenter
 import com.mibaldi.cah.base.views.BaseMvpView
+import com.mibaldi.cah.data.models.Game
 
 
 object MainContract {
@@ -12,13 +13,15 @@ object MainContract {
         fun showError(message: String?)
         fun observeUser(observer:Observer<String>)
         fun alertJoinGame()
+        fun observeList(observerGameList: Observer<List<Game>>)
+        fun showGameList(listGame: List<Game>)
     }
 
     interface Presenter : BaseMvpPresenter<View> {
         fun  initializer(viewModel: ViewModel)
-        fun getCurrentUser()
         fun joinGame(mKey: String)
         fun showJoinGameAlert()
+        fun getGameList()
 
     }
 }

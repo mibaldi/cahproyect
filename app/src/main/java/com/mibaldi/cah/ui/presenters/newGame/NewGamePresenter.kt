@@ -6,6 +6,7 @@ import com.mibaldi.cah.data.models.Game
 import com.mibaldi.cah.data.models.Player
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
+import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.NewGameContract
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
@@ -14,7 +15,9 @@ import javax.inject.Inject
 
 class NewGamePresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BasePresenter<NewGameContract.View>(), NewGameContract.Presenter {
 
+
     var mKey :String = ""
+    lateinit var mModel: MainViewModel
     override fun createGame() {
         val observer : Observer<String> = object : Observer<String>{
             override fun onSubscribe(d: Disposable) {
@@ -30,7 +33,7 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
             }
 
             override fun onComplete() {
-                addPlayer(Player("Mikel"))
+                addPlayer(Player(mModel.currentUser.value ?: "Mikel"))
                 mView?.showSharedAlert()
             }
 
@@ -62,7 +65,10 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
         }
         gameManager.addPlayer(mKey, player,observer)
     }
+    override fun initializer(viewModel: MainViewModel) {
+        mModel = viewModel
 
+    }
 
 
 }

@@ -21,8 +21,17 @@
             android:parentActivityName=".ui.activities.MainActivity"/>
         <activity android:name=".ui.activities.NewGameActivity"
             android:parentActivityName=".ui.activities.MainActivity"/>
-        <activity android:name=".ui.activities.GameActivity"
-            android:parentActivityName=".ui.activities.NewGameActivity"/>
+        <activity android:name=".ui.activities.GameActivity" android:parentActivityName=".ui.activities.NewGameActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="mibaldi.com" android:scheme="http"/>
+                <data android:host="mibaldi.com" android:scheme="https"/>
+            </intent-filter>
+        </activity>
+
+
     </application>
 
 </manifest>

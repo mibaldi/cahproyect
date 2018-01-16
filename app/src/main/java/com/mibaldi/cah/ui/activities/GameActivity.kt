@@ -1,11 +1,18 @@
 package com.mibaldi.cah.ui.activities
 
+import android.app.Activity
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import com.google.android.gms.appinvite.AppInviteInvitation
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
 import com.mibaldi.cah.ui.presenters.game.GamePresenter
+import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.GameContract
+import com.mibaldi.cah.utils.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_game.*
 import org.jetbrains.anko.design.longSnackbar
 import javax.inject.Inject
@@ -13,19 +20,25 @@ import javax.inject.Inject
 class GameActivity : BaseMvpActivity<GameContract.View,
         GamePresenter>(),
         GameContract.View {
-
-
+    companion object {
+        val REQUEST_INVITE = 209
+    }
     @Inject
     override lateinit var mPresenter : GamePresenter
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var model: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         setupToolbar()
         val idGame = intent.getStringExtra("idGame")
-        mPresenter.initialize(idGame)
+        model = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
+        mPresenter.initialize(idGame,model)
         btnShared.setOnClickListener { mPresenter.sharedWhatsapp() }
         btnInitGame.setOnClickListener{ mPresenter.changeStateRound() }
+
 
     }
 
@@ -55,7 +68,24 @@ class GameActivity : BaseMvpActivity<GameContract.View,
     override fun showButton() {
         btnInitGame.visibility = View.VISIBLE
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d(TAG, "onActivityResult: requestCode=$requestCode, resultCode=$resultCode")
 
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                val ids = AppInviteInvitation.getInvitationIds(resultCode, data)
+                for (id in ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id)
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
+            }
+        }
+    }
 
 
 }

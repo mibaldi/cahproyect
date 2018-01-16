@@ -9,11 +9,12 @@ class UserRepository @Inject constructor() {
 
     fun changeUsername(username: String, param: (Pair<String?,Error?>) -> Unit){
         Log.d("REPOSITORY","Changed")
-        if(username.equals("Mikel")){
+        param(Pair(username,null))
+        /*if(username.equals("Mikel")){
             param(Pair(username,null))
         }else {
             param(Pair(null,Error("Username no valido")))
-        }
+        }*/
 
     }
 

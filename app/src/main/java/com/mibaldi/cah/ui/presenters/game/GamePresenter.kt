@@ -6,6 +6,8 @@ import com.mibaldi.cah.data.models.Game
 import com.mibaldi.cah.data.models.Player
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
+import com.mibaldi.cah.ui.activities.GameActivity
+import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.GameContract
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
@@ -16,8 +18,9 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
 
 
     lateinit var mIdGame : String
-
-    override fun initialize(idGame: String) {
+    lateinit var mModel: MainViewModel
+    override fun initialize(idGame: String,model: MainViewModel) {
+        mModel = model
         mIdGame = idGame
 
         val observer : Observer<Long> = object : Observer<Long> {
@@ -42,7 +45,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
     }
 
     fun sharedWhatsapp(){
-        router.sharedWhatsapp(mIdGame)
+        router.sharedWhatsapp(mView?.getMyActivity() as GameActivity,mIdGame)
     }
     fun initGame(){
         gameManager.whoIsRoundPlayer(mIdGame,object : Observer<String>{
@@ -57,7 +60,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
             }
 
             override fun onNext(username: String) {
-                if(username == "Mikel"){
+                if(username == mModel.currentUser.value){
                     gameManager.isGamePrepared(mIdGame,object : Observer<String>{
                         override fun onComplete() {
                             mView?.showButton()

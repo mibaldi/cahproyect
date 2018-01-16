@@ -2,6 +2,7 @@ package com.mibaldi.cah.ui.views
 
 import com.mibaldi.cah.base.presenters.activities.BaseMvpPresenter
 import com.mibaldi.cah.base.views.BaseMvpView
+import com.mibaldi.cah.ui.viewModels.MainViewModel
 
 object GameContract {
     interface View : BaseMvpView {
@@ -13,7 +14,7 @@ object GameContract {
     }
 
     interface Presenter : BaseMvpPresenter<View> {
-        fun initialize(idGame: String)
+        fun initialize(idGame: String,model: MainViewModel)
         fun changeStateRound()
     }
 }

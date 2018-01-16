@@ -21,6 +21,18 @@ import org.jetbrains.anko.design.longSnackbar
 
 
 import javax.inject.Inject
+import com.google.android.gms.tasks.OnFailureListener
+import android.content.Intent
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
+import android.view.View
+import com.google.android.gms.appinvite.AppInviteReferral.getInvitationId
+import com.google.firebase.appinvite.FirebaseAppInvite
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.mibaldi.cah.data.models.Game
+import com.mibaldi.cah.ui.adapters.GameListAdapter
 
 
 class MainActivity : BaseMvpActivity<MainContract.View,
@@ -28,21 +40,59 @@ class MainActivity : BaseMvpActivity<MainContract.View,
         MainContract.View, NavigationView.OnNavigationItemSelectedListener {
 
 
+
     @Inject
     override lateinit var mPresenter: MainPresenter
     @Inject
     lateinit var viewModelFactory:ViewModelFactory
     lateinit var model: MainViewModel
-
+    lateinit var adapter: GameListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         model = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
         mPresenter.initializer(model)
-        mPresenter.getCurrentUser()
+        mPresenter.getGameList()
         setupToolbar()
+        invites()
+        rvGameList.setHasFixedSize(true);
+        val mLayoutManager = LinearLayoutManager(this);
+        rvGameList.layoutManager = mLayoutManager;
+        adapter = GameListAdapter()
+
+        rvGameList.adapter = adapter
     }
+
+
+    private fun invites() {
+        FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
+                .addOnSuccessListener(this, OnSuccessListener { data ->
+                    if (data == null) {
+                        Log.d(BaseMvpActivity.TAG, "getInvitation: no data")
+                        return@OnSuccessListener
+                    }
+                    // Get the deep link
+                    val deepLink = data.link
+                    // Extract invite
+                    val invite = FirebaseAppInvite.getInvitation(data)
+                    if (invite != null) {
+                        val invitationId = invite.invitationId
+                    }
+                    // Handle the deep link
+                    // [START_EXCLUDE]
+                    Log.d(BaseMvpActivity.TAG, "deepLink:" + deepLink!!)
+                    mPresenter.joinGame(deepLink.toString().split(".com/")[1])
+                    /* val intent = Intent(Intent.ACTION_VIEW)
+                        intent.`package` = packageName
+                        intent.data = deepLink
+
+                        startActivity(intent)*/
+                    // [END_EXCLUDE]
+                })
+                .addOnFailureListener(this) { e -> Log.w(BaseMvpActivity.TAG, "getDynamicLink:onFailure", e) }
+    }
+
     override fun showCurrentUser(user: String) {
         tvCurrentUser.text=user
     }
@@ -106,5 +156,19 @@ class MainActivity : BaseMvpActivity<MainContract.View,
         JoinGameDialog.newInstance(this,"Introduce clave:"){
             mKey -> mPresenter.joinGame(mKey)
         }
+    }
+
+    override fun observeList(observerGameList: Observer<List<Game>>) {
+        model.gameList.observe(this,observerGameList)
+    }
+
+    override fun showGameList(listGame: List<Game>) {
+
+        adapter.setDataAndListener(listGame,object : GameListAdapter.OnItemClickListener{
+            override fun onItemClickListener(view: View, game: Game) {
+                mPresenter.joinGame(game.name)
+            }
+
+        })
     }
 }

@@ -1,11 +1,14 @@
 package com.mibaldi.cah.ui.activities
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.View
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
 import com.mibaldi.cah.ui.presenters.newGame.NewGamePresenter
+import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.NewGameContract
+import com.mibaldi.cah.utils.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_newgame.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.design.longSnackbar
@@ -19,11 +22,15 @@ class NewGameActivity : BaseMvpActivity<NewGameContract.View,
 
     @Inject
     override lateinit var mPresenter : NewGamePresenter
-
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var model: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_newgame)
         setupToolbar()
+        model = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
+        mPresenter.initializer(model)
         btn_newGame.onClick { mPresenter.createGame()}
     }
 

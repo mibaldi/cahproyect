@@ -56,6 +56,8 @@ class GameFirebaseManager @Inject constructor(){
             }
         })
     }
+
+    //TODO devolver turno entero
     fun whoIsRoundPlayer(gameKey: String,subscriber: Observer<String>){
         gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).addValueEventListener (object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -104,6 +106,25 @@ class GameFirebaseManager @Inject constructor(){
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 subscriber.onError(Error(databaseError.message))
+            }
+        })
+    }
+
+    //TODO devolver turno entero
+    fun stateOfTurn(gameKey: String,subscriber: Observer<String>){
+        gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).addValueEventListener (object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach {
+                    val state = it.child("estado").value
+                    if (state != null){
+                        val stateLong = state as Long
+                        subscriber.onNext(stateLong.toString())
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                //Handle possible errors.
             }
         })
     }

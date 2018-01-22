@@ -81,6 +81,22 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
 
         })
 
+        gameManager.stateOfTurn(mIdGame,object: Observer<String>{
+            override fun onComplete() {
+            }
+
+            override fun onSubscribe(d: Disposable) {
+            }
+
+            override fun onNext(state: String) {
+                mView?.changeState(state)
+            }
+
+            override fun onError(e: Throwable) {
+            }
+
+        })
+
     }
     override fun changeStateRound(){
 

@@ -11,6 +11,7 @@ object GameContract {
         fun showError(message: String?)
         fun changeNumPlayers(it: Long)
         fun showButton()
+        fun changeState(state: String)
     }
 
     interface Presenter : BaseMvpPresenter<View> {

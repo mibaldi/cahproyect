@@ -9,10 +9,14 @@ import android.view.View
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
+import com.mibaldi.cah.ui.fragments.GameFragmentQuestion
+import com.mibaldi.cah.ui.fragments.GameFragmentResponses
 import com.mibaldi.cah.ui.presenters.game.GamePresenter
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.GameContract
 import com.mibaldi.cah.utils.ViewModelFactory
+import com.mibaldi.cah.utils.addFragment
+import com.mibaldi.cah.utils.replaceFragment
 import kotlinx.android.synthetic.main.activity_game.*
 import org.jetbrains.anko.design.longSnackbar
 import javax.inject.Inject
@@ -20,6 +24,8 @@ import javax.inject.Inject
 class GameActivity : BaseMvpActivity<GameContract.View,
         GamePresenter>(),
         GameContract.View {
+
+
     companion object {
         val REQUEST_INVITE = 209
     }
@@ -38,8 +44,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         mPresenter.initialize(idGame,model)
         btnShared.setOnClickListener { mPresenter.sharedWhatsapp() }
         btnInitGame.setOnClickListener{ mPresenter.changeStateRound() }
-
-
+        addFragment(GameFragmentQuestion.newInstance(idGame,"Narrator"),R.id.flGameFragment)
     }
 
     private fun setupToolbar() {
@@ -84,6 +89,15 @@ class GameActivity : BaseMvpActivity<GameContract.View,
                 // Sending failed or it was canceled, show failure message to the user
                 // ...
             }
+        }
+    }
+
+    override fun changeState(state: String) {
+        when(state){
+            "0" -> replaceFragment(GameFragmentQuestion.newInstance("","Narrator"),R.id.flGameFragment)
+            "1" -> replaceFragment(GameFragmentResponses.newInstance("","Responses"),R.id.flGameFragment)
+            "2" -> replaceFragment(GameFragmentResponses.newInstance("","Responses2"),R.id.flGameFragment)
+            "3" -> replaceFragment(GameFragmentResponses.newInstance("","Responses3"),R.id.flGameFragment)
         }
     }
 

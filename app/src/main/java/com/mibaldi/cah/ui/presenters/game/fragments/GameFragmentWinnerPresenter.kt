@@ -1,4 +1,4 @@
-package com.mibaldi.cah.ui.presenters.game.fragments.question
+package com.mibaldi.cah.ui.presenters.game.fragments
 
 import com.mibaldi.cah.base.presenters.fragments.BaseFragmentPresenter
 import com.mibaldi.cah.managers.GameFirebaseManager
@@ -8,7 +8,7 @@ import com.mibaldi.cah.ui.views.GameFragmentContract
 import javax.inject.Inject
 
 
-class GameFragmentQuestionPresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BaseFragmentPresenter<GameFragmentContract.FragmentQuestionView>(), GameFragmentContract.FragmentQuestionPresenter {
+class GameFragmentWinnerPresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BaseFragmentPresenter<GameFragmentContract.FragmentWinnerView>(), GameFragmentContract.FragmentWinnerPresenter {
 
 
     lateinit var mIdGame : String

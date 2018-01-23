@@ -6,8 +6,7 @@ import com.mibaldi.cah.ui.activities.GameActivity
 import dagger.Module
 import com.mibaldi.cah.ui.activities.MainActivity
 import com.mibaldi.cah.ui.activities.NewGameActivity
-import com.mibaldi.cah.ui.fragments.di.GameFragmentQuestionProvider
-import com.mibaldi.cah.ui.fragments.di.GameFragmentResponsesProvider
+import com.mibaldi.cah.ui.fragments.di.GameFragmentsProvider
 import com.mibaldi.cah.ui.presenters.configuration.ConfigurationModule
 import com.mibaldi.cah.ui.presenters.game.GameModule
 import com.mibaldi.cah.ui.presenters.main.MainModule
@@ -29,8 +28,7 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = arrayOf(
             GameModule::class,
-            GameFragmentQuestionProvider::class,
-            GameFragmentResponsesProvider::class
+            GameFragmentsProvider::class
     ))
     abstract fun GameActivity(): GameActivity
 }

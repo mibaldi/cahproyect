@@ -19,6 +19,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
 
     lateinit var mIdGame : String
     lateinit var mModel: MainViewModel
+    var currentState = "-1"
     override fun initialize(idGame: String,model: MainViewModel) {
         mModel = model
         mIdGame = idGame
@@ -48,7 +49,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
         router.sharedWhatsapp(mView?.getMyActivity() as GameActivity,mIdGame)
     }
     fun initGame(){
-        gameManager.whoIsRoundPlayer(mIdGame,object : Observer<String>{
+        gameManager.whoIsRoundPlayer(mIdGame,object : Observer<Pair<String,Long>>{
             override fun onSubscribe(d: Disposable) {
                 Log.d("Subscriber","New Subscriber")
             }
@@ -59,37 +60,26 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
             override fun onError(e: Throwable) {
             }
 
-            override fun onNext(username: String) {
-                if(username == mModel.currentUser.value){
-                    gameManager.isGamePrepared(mIdGame,object : Observer<String>{
-                        override fun onComplete() {
-                            mView?.showButton()
-                        }
-                        override fun onError(e: Throwable) {
-                            Log.d("isGamePrepared","Error ${e.message}")
-                        }
-                        override fun onSubscribe(d: Disposable) {
-                            Log.d("isGamePrepared","Subscripcion Juego preparado ${d.isDisposed}")
-                        }
-
-                        override fun onNext(t: String) {
-                            Log.d("isGamePrepared","Juego preparado $t")
-                        }
-                    })
+            override fun onNext(username: Pair<String,Long>) {
+                mView?.showTurn(username.second)
+                if(username.first == mModel.currentUser.value) {
+                    mView?.showButton()
                 }
             }
 
         })
 
-        gameManager.stateOfTurn(mIdGame,object: Observer<String>{
+        gameManager.stateOfTurn(mIdGame,object: Observer<Pair<String,Long>>{
             override fun onComplete() {
             }
 
             override fun onSubscribe(d: Disposable) {
             }
 
-            override fun onNext(state: String) {
-                mView?.changeState(state)
+            override fun onNext(state: Pair<String,Long>) {
+                currentState = state.first
+                mView?.showTurn(state.second)
+                mView?.changeState(state.first)
             }
 
             override fun onError(e: Throwable) {

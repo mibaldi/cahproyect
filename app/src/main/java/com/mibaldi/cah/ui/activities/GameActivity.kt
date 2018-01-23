@@ -11,6 +11,8 @@ import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
 import com.mibaldi.cah.ui.fragments.GameFragmentQuestion
 import com.mibaldi.cah.ui.fragments.GameFragmentResponses
+import com.mibaldi.cah.ui.fragments.GameFragmentResult
+import com.mibaldi.cah.ui.fragments.GameFragmentWinner
 import com.mibaldi.cah.ui.presenters.game.GamePresenter
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.GameContract
@@ -26,11 +28,13 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         GameContract.View {
 
 
+
     companion object {
         val REQUEST_INVITE = 209
     }
     @Inject
     override lateinit var mPresenter : GamePresenter
+    lateinit var idGame: String
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -39,12 +43,11 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         setupToolbar()
-        val idGame = intent.getStringExtra("idGame")
+        idGame = intent.getStringExtra("idGame")
         model = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
         mPresenter.initialize(idGame,model)
-        btnShared.setOnClickListener { mPresenter.sharedWhatsapp() }
+        //btnShared.setOnClickListener { mPresenter.sharedWhatsapp() }
         btnInitGame.setOnClickListener{ mPresenter.changeStateRound() }
-        addFragment(GameFragmentQuestion.newInstance(idGame,"Narrator"),R.id.flGameFragment)
     }
 
     private fun setupToolbar() {
@@ -91,13 +94,16 @@ class GameActivity : BaseMvpActivity<GameContract.View,
             }
         }
     }
+    override fun showTurn(turn: Long) {
+        tvTurn.text = "Es el turno $turn"
+    }
 
     override fun changeState(state: String) {
         when(state){
-            "0" -> replaceFragment(GameFragmentQuestion.newInstance("","Narrator"),R.id.flGameFragment)
-            "1" -> replaceFragment(GameFragmentResponses.newInstance("","Responses"),R.id.flGameFragment)
-            "2" -> replaceFragment(GameFragmentResponses.newInstance("","Responses2"),R.id.flGameFragment)
-            "3" -> replaceFragment(GameFragmentResponses.newInstance("","Responses3"),R.id.flGameFragment)
+            "0" -> replaceFragment(GameFragmentQuestion.newInstance(idGame,"Narrator"),R.id.flGameFragment)
+            "1" -> replaceFragment(GameFragmentResponses.newInstance(idGame,"Responses"),R.id.flGameFragment)
+            "2" -> replaceFragment(GameFragmentResult.newInstance(idGame,"Results"),R.id.flGameFragment)
+            "3" -> replaceFragment(GameFragmentWinner.newInstance(idGame,"Winner"),R.id.flGameFragment)
         }
     }
 

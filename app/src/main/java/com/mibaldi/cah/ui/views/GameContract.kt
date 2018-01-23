@@ -12,6 +12,7 @@ object GameContract {
         fun changeNumPlayers(it: Long)
         fun showButton()
         fun changeState(state: String)
+        fun showTurn(turn: Long)
     }
 
     interface Presenter : BaseMvpPresenter<View> {

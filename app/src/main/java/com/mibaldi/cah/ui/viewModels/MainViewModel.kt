@@ -11,7 +11,7 @@ class MainViewModel: ViewModel() {
     var currentUser = MutableLiveData<String>()
     fun getCurrentUser(): LiveData<String> {
         if (currentUser.value == null){
-            currentUser.value = ""
+            currentUser.value = "Mikel"
         }
         return currentUser
     }

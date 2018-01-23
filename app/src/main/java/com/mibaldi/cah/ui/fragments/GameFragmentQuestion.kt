@@ -8,12 +8,19 @@ import android.view.ViewGroup
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.fragments.BaseMvpFragment
 import com.mibaldi.cah.ui.activities.GameActivity
-import com.mibaldi.cah.ui.presenters.game.fragments.question.GameFragmentQuestionPresenter
+import com.mibaldi.cah.ui.presenters.game.fragments.GameFragmentQuestionPresenter
 import com.mibaldi.cah.ui.views.GameFragmentContract
 import kotlinx.android.synthetic.main.fragment_game_question.*
 import javax.inject.Inject
+import android.widget.Toast
+import android.R.interpolator.linear
+import android.graphics.Color
+import android.widget.Button
+import android.widget.LinearLayout
+
 
 class GameFragmentQuestion: BaseMvpFragment<GameFragmentContract.FragmentQuestionView, GameFragmentQuestionPresenter>(),GameFragmentContract.FragmentQuestionView{
+
 
     @Inject
     override lateinit var mPresenter : GameFragmentQuestionPresenter
@@ -38,6 +45,34 @@ class GameFragmentQuestion: BaseMvpFragment<GameFragmentContract.FragmentQuestio
     }
     override fun setType(type: String) {
         tvType.text = "Question type = $type"
+    }
+
+    override fun showQuestions(questionList: List<Long>) {
+        llQuestions.weightSum = questionList.size.toFloat()
+        for (question in questionList){
+            generateButton(question)
+        }
+    }
+
+    private fun generateButton(question: Long){
+        val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,1.0f)
+
+        val btn = Button(getMyActivity())
+        btn.setId(question.toInt())
+
+        val id_ = btn.getId()
+        btn.setText("button  $id_")
+        btn.setBackgroundColor(Color.rgb(70, 80, 90))
+        llQuestions.addView(btn, params)
+        val btn1 = getMyActivity().findViewById(id_) as Button
+        btn1.setOnClickListener({ view ->
+            mPresenter.setQuestion(id_)
+            Toast.makeText(view.context,
+                    "Button clicked index = " + id_, Toast.LENGTH_SHORT)
+                    .show()
+        })
     }
 
     companion object {

@@ -1,4 +1,5 @@
 package com.mibaldi.cah.application
+import android.content.Context
 import com.mibaldi.cah.application.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication

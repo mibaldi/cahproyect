@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.fragments.BaseMvpFragment
 import com.mibaldi.cah.ui.activities.GameActivity
-import com.mibaldi.cah.ui.presenters.game.fragments.question.GameFragmentQuestionPresenter
-import com.mibaldi.cah.ui.presenters.game.fragments.responses.GameFragmentResponsesPresenter
+import com.mibaldi.cah.ui.presenters.game.fragments.GameFragmentResponsesPresenter
 import com.mibaldi.cah.ui.views.GameFragmentContract
 import kotlinx.android.synthetic.main.fragment_game_question.*
 import javax.inject.Inject

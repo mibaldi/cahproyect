@@ -6,7 +6,7 @@
     <TextView
         android:id="@+id/tvTurn"
         android:gravity="center"
-        android:text="TURNO QUESTION"
+        android:text="TURNO GANADOR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
@@ -15,9 +15,4 @@
         android:text="TURN TYPE"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <LinearLayout
-        android:id="@+id/llQuestions"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"/>
 </LinearLayout>

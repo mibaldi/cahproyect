@@ -1,13 +1,10 @@
 package com.mibaldi.cah.managers
 
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.mibaldi.cah.data.models.Game
 import com.mibaldi.cah.data.models.Player
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DataSnapshot
 import com.mibaldi.cah.data.models.firebase.PlayerFirebase
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -58,13 +55,14 @@ class GameFirebaseManager @Inject constructor(){
     }
 
     //TODO devolver turno entero
-    fun whoIsRoundPlayer(gameKey: String,subscriber: Observer<String>){
+    fun whoIsRoundPlayer(gameKey: String,subscriber: Observer<Pair<String,Long>>){
         gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).addValueEventListener (object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 dataSnapshot.children.forEach {
-                    gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).removeEventListener(this)
+                    //gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).removeEventListener(this)
                     val narrator = it.child("narrador").value as String
-                    subscriber.onNext(narrator)
+                    val pair = Pair(narrator, it.key.toLong())
+                    subscriber.onNext(pair)
                 }
             }
 
@@ -111,21 +109,35 @@ class GameFirebaseManager @Inject constructor(){
     }
 
     //TODO devolver turno entero
-    fun stateOfTurn(gameKey: String,subscriber: Observer<String>){
-        gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).addValueEventListener (object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                dataSnapshot.children.forEach {
-                    val state = it.child("estado").value
-                    if (state != null){
-                        val stateLong = state as Long
-                        subscriber.onNext(stateLong.toString())
-                    }
+    fun stateOfTurn(gameKey: String,subscriber: Observer<Pair<String,Long>>){
+        var currentState = -1L
+        gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).addChildEventListener(object : ChildEventListener{
+            override fun onCancelled(p0: DatabaseError?) {}
+
+            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {}
+
+            override fun onChildChanged(child: DataSnapshot?, p1: String?) {
+                val state = child?.child("estado")?.value
+                if (state != null && currentState != state){
+                    val stateLong = state as Long
+                    currentState = stateLong
+                    val pair = Pair(stateLong.toString(), child.key.toLong())
+                    subscriber.onNext(pair)
                 }
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                //Handle possible errors.
+            override fun onChildAdded(child: DataSnapshot?, p1: String?) {
+                val state = child?.child("estado")?.value
+                if (state != null ){
+                    val stateLong = state as Long
+                    currentState = stateLong
+                    val pair = Pair(stateLong.toString(), child.key.toLong())
+                    subscriber.onNext(pair)
+                }
+
             }
+
+            override fun onChildRemoved(p0: DataSnapshot?) {}
         })
     }
 

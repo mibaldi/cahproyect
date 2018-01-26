@@ -15,17 +15,20 @@ import javax.inject.Inject
 
 class NewGamePresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BasePresenter<NewGameContract.View>(), NewGameContract.Presenter {
 
+    var mGame: Game? = null
 
-    var mKey :String = ""
     lateinit var mModel: MainViewModel
     override fun createGame() {
+        var userLogued = mModel.currentUser.value ?: "Mikel"
+        mGame = Game(userLogued,"miJuego")
+
         val observer : Observer<String> = object : Observer<String>{
             override fun onSubscribe(d: Disposable) {
                 Log.d("Subscriber","New Subscriber")
             }
 
             override fun onNext(it: String) {
-                mKey = it
+                mGame?.keyGame = it
             }
 
             override fun onError(e: Throwable) {
@@ -33,16 +36,24 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
             }
 
             override fun onComplete() {
-                addPlayer(Player(mModel.currentUser.value ?: "Mikel"))
+                addPlayer(Player(userLogued))
                 mView?.showSharedAlert()
             }
 
         }
-        gameManager.newGame(Game("miJuego"),observer)
+        mGame?.let {
+            gameManager.newGame(it,observer)
+        }
     }
 
     override fun goToGameActivity() {
-        router.gotToGame(mKey)
+        mGame?.let {
+            if(it.keyGame.isNotEmpty()) {
+                mModel.setCurrentGame(it)
+                router.gotToGame(it.keyGame)
+            }
+        }
+
     }
 
     fun addPlayer(player: Player){
@@ -63,7 +74,9 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
 
             }
         }
-        gameManager.addPlayer(mKey, player,observer)
+        mGame?.let {
+            gameManager.addPlayer(it.keyGame, player, observer)
+        }
     }
     override fun initializer(viewModel: MainViewModel) {
         mModel = viewModel

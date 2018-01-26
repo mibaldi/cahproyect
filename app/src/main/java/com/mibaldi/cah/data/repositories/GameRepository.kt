@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.mibaldi.cah.data.models.Game
 import com.mibaldi.cah.data.models.firebase.GameConfigFirebase
 import com.mibaldi.cah.data.models.firebase.GameFirebase
 import io.reactivex.Observer
@@ -20,28 +21,23 @@ class GameRepository @Inject constructor() {
         val database = FirebaseDatabase.getInstance()
         val gamesRef =  database.reference.child("juegos")
     }
-    fun getAllGames(subscriber: Observer<GameFirebase>){
-        gamesRef.addValueEventListener(object : ValueEventListener{
+    fun getAllGames(subscriber: Observer<List<Game>>){
+        val games: MutableList<Game> = mutableListOf()
+        gamesRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(databaseError: DatabaseError?) {
 
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (children in dataSnapshot.getChildren()) {
 
-                    //val game = children.getValue(GameFirebase::class.java)
-
-                    val config = children.child("config")
-                    val numCartasJugador = config.child("numCartasJugador").value as Long
-                    val numJugadores = config.child("numJugadores").value as Long
-                    val rondas = config.child("rondas").value as Long
-                    val tiempo = config.child("tiempo").value as Long
-                    val gameConfigFirebase = GameConfigFirebase(numCartasJugador.toInt(), numJugadores.toInt(), rondas.toInt(), tiempo.toInt())
-                    val game = GameFirebase(children.key,gameConfigFirebase )
-                    game.let {
-                        subscriber.onNext(it)
-                    }
+                dataSnapshot.children.mapNotNullTo(games) {
+                    val firebaseGame = it.getValue<GameFirebase>(GameFirebase::class.java)
+                    val game = firebaseGame?.toGame()
+                    game?.keyGame = dataSnapshot.key
+                    game
                 }
+
+                subscriber.onNext(games)
                 subscriber.onComplete()
             }
 

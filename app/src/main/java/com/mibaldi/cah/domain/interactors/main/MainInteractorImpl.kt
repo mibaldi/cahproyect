@@ -12,10 +12,10 @@ import io.reactivex.disposables.Disposable
 class MainInteractorImpl(val userRepository: UserRepository,val gameRepository: GameRepository) : MainInteractor {
 
     override fun getAllPlays(subscriber: Observer<List<Game>>) {
-        val gameList = mutableListOf<Game>()
-        val observer  = object : Observer<GameFirebase> {
-            override fun onNext(gameFirebase: GameFirebase) {
-               gameList.add(gameFirebase.toGame())
+        var gameList = mutableListOf<Game>()
+        val observer  = object : Observer<List<Game>> {
+            override fun onNext(list: List<Game>) {
+                gameList = list.toMutableList()
             }
 
             override fun onSubscribe(d: Disposable) {

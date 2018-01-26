@@ -16,7 +16,8 @@ object GameContract {
     }
 
     interface Presenter : BaseMvpPresenter<View> {
-        fun initialize(idGame: String,model: MainViewModel)
+        fun initialize(model: MainViewModel)
         fun changeStateRound()
+        fun startRound()
     }
 }

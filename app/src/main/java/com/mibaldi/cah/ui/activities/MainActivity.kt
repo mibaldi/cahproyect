@@ -165,7 +165,7 @@ class MainActivity : BaseMvpActivity<MainContract.View,
     override fun showGameList(listGame: List<Game>) {
 
         adapter.setDataAndListener(listGame,object : GameListAdapter.OnItemClickListener{
-            override fun onItemClickListener(view: View, game: Game) {
+            override fun onItemClickListener(game: Game) {
                 mPresenter.joinGame(game.name)
             }
 

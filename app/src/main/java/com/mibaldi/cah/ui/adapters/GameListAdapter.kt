@@ -14,7 +14,7 @@ class GameListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     lateinit var listener: OnItemClickListener
 
     interface OnItemClickListener {
-        fun onItemClickListener(view: View, game: Game)
+        fun onItemClickListener(game: Game)
     }
 
 
@@ -37,14 +37,13 @@ class GameListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class GameHolder(itemView: View, callback: OnItemClickListener): RecyclerView.ViewHolder(itemView) {
         lateinit var game: Game
-        init {
-        }
+        var listner : OnItemClickListener = callback
 
         fun bindItem(item: Game){
             game = item
             itemView.tvName.text = item.name
             itemView.tvNumberPlayers.text = item.numPlayers.toString()
-
+            itemView.setOnClickListener { listner.onItemClickListener(game)}
         }
     }
 

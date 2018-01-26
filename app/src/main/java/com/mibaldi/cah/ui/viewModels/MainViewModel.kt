@@ -20,6 +20,18 @@ class MainViewModel: ViewModel() {
         currentUser.value = user
     }
 
+    var currentGame = MutableLiveData<Game>()
+    fun setCurrentGame(game : Game){
+        currentGame.value = game;
+    }
+
+    fun getCurrentGame(): LiveData<Game>{
+        if (currentGame.value == null){
+            currentGame.value = Game("","")
+        }
+        return currentGame
+    }
+
     var gameList = MutableLiveData<List<Game>>()
     fun getGameList(): LiveData<List<Game>> {
         if (gameList.value == null){

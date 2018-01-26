@@ -4,6 +4,7 @@ import android.util.Log
 import com.mibaldi.cah.base.presenters.activities.BasePresenter
 import com.mibaldi.cah.data.models.Game
 import com.mibaldi.cah.data.models.Player
+import com.mibaldi.cah.data.models.Turn
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
 import com.mibaldi.cah.ui.activities.GameActivity
@@ -17,20 +18,22 @@ import javax.inject.Inject
 class GamePresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BasePresenter<GameContract.View>(), GameContract.Presenter {
 
 
-    lateinit var mIdGame : String
+    var mGame : Game? = null
+    var mUser: String? = null
     lateinit var mModel: MainViewModel
-    var currentState = "-1"
-    override fun initialize(idGame: String,model: MainViewModel) {
+    var currentState = -1L
+    override fun initialize(model: MainViewModel) {
         mModel = model
-        mIdGame = idGame
+        mGame = mModel.currentGame.value
+        mUser = mModel.currentUser.value
 
         val observer : Observer<Long> = object : Observer<Long> {
             override fun onSubscribe(d: Disposable) {
                 Log.d("Subscriber","New Subscriber")
             }
 
-            override fun onNext(it: Long) {
-                mView?.changeNumPlayers(it)
+            override fun onNext(numPlayers: Long) {
+                mView?.changeNumPlayers(numPlayers)
             }
 
             override fun onError(e: Throwable) {
@@ -38,60 +41,50 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
             }
 
             override fun onComplete() {
+                mView?.showProgress()
             }
 
         }
-        gameManager.getNumPlayers(mIdGame,observer)
-        initGame()
+        mGame?.let {
+            gameManager.getNumPlayers(it,observer)
+            initGame()
+        }
     }
 
-    fun sharedWhatsapp(){
-        router.sharedWhatsapp(mView?.getMyActivity() as GameActivity,mIdGame)
-    }
     fun initGame(){
-        gameManager.whoIsRoundPlayer(mIdGame,object : Observer<Pair<String,Long>>{
-            override fun onSubscribe(d: Disposable) {
-                Log.d("Subscriber","New Subscriber")
-            }
-
-            override fun onComplete() {
-            }
-
-            override fun onError(e: Throwable) {
-            }
-
-            override fun onNext(username: Pair<String,Long>) {
-                mView?.showTurn(username.second)
-                if(username.first == mModel.currentUser.value) {
-                    mView?.showButton()
+        mGame?.let {
+            gameManager.stateOfTurn(it.keyGame, object : Observer<Turn> {
+                override fun onComplete() {
                 }
-            }
 
-        })
+                override fun onSubscribe(d: Disposable) {
+                }
 
-        gameManager.stateOfTurn(mIdGame,object: Observer<Pair<String,Long>>{
-            override fun onComplete() {
-            }
+                override fun onNext(turn: Turn) {
+                    turn.status?.let {
+                        mView?.hideProgress()
+                        currentState = it
+                        mView?.showTurn(it)
+                        mView?.changeState(turn.turnNumber!!)
+                    }
+                }
 
-            override fun onSubscribe(d: Disposable) {
-            }
+                override fun onError(e: Throwable) {
+                }
 
-            override fun onNext(state: Pair<String,Long>) {
-                currentState = state.first
-                mView?.showTurn(state.second)
-                mView?.changeState(state.first)
-            }
+            })
+        }
+    }
 
-            override fun onError(e: Throwable) {
-            }
-
-        })
-
+    override fun startRound() {
+        mGame?.let {
+            gameManager.startRound(it.keyGame)
+        }
     }
     override fun changeStateRound(){
 
-        if (mIdGame.isNotEmpty()){
-            gameManager.startRound(mIdGame)
+        mGame?.let {
+            gameManager.startRound(it.keyGame)
         }
     }
 }

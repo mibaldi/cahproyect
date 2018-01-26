@@ -1,6 +1,7 @@
 package com.mibaldi.cah.ui.activities
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -21,13 +22,13 @@ import com.mibaldi.cah.utils.addFragment
 import com.mibaldi.cah.utils.replaceFragment
 import kotlinx.android.synthetic.main.activity_game.*
 import org.jetbrains.anko.design.longSnackbar
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.progressDialog
 import javax.inject.Inject
 
 class GameActivity : BaseMvpActivity<GameContract.View,
         GamePresenter>(),
         GameContract.View {
-
-
 
     companion object {
         val REQUEST_INVITE = 209
@@ -39,15 +40,15 @@ class GameActivity : BaseMvpActivity<GameContract.View,
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var model: MainViewModel
+    private var dialog: ProgressDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         setupToolbar()
-        idGame = intent.getStringExtra("idGame")
         model = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
-        mPresenter.initialize(idGame,model)
-        //btnShared.setOnClickListener { mPresenter.sharedWhatsapp() }
-        btnInitGame.setOnClickListener{ mPresenter.changeStateRound() }
+        mPresenter.initialize(model)
+        btnInitGame.setOnClickListener{ mPresenter.startRound() }
     }
 
     private fun setupToolbar() {
@@ -58,11 +59,11 @@ class GameActivity : BaseMvpActivity<GameContract.View,
 
 
     override fun showProgress() {
-        progress.visibility = View.VISIBLE
+        dialog = indeterminateProgressDialog("Iniciando partida. Espere...")
     }
 
     override fun hideProgress() {
-        progress.visibility = View.GONE
+        dialog?.dismiss()
     }
 
     override fun showError(message: String?) {

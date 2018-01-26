@@ -3,10 +3,10 @@ package com.mibaldi.cah.managers
 import com.google.firebase.database.*
 import com.mibaldi.cah.data.models.Game
 import com.mibaldi.cah.data.models.Player
+import com.mibaldi.cah.data.models.Turn
+import com.mibaldi.cah.data.models.firebase.TurnFirebase
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.mibaldi.cah.data.models.firebase.PlayerFirebase
-import io.reactivex.Observable
 import io.reactivex.Observer
 
 
@@ -27,7 +27,7 @@ class GameFirebaseManager @Inject constructor(){
         gameRef.child(key).setValue(game.toGameFirebase())
                 .addOnCompleteListener { task ->
                     if(task.isSuccessful){
-                        this.isGamePrepared(key,subscriber)
+                        this.checkGameStatus(key,subscriber)
                     }
                 }
     }
@@ -37,6 +37,21 @@ class GameFirebaseManager @Inject constructor(){
                 .addOnCompleteListener{ task ->
                     subscriber.onNext(task.isSuccessful)
                 }
+    }
+
+    fun startGame(gameKey: String){
+        gameRef.child(gameKey).addListenerForSingleValueEvent (object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach {
+                    gameRef.child(gameKey).child(refRounds).child(it.key).child("estado").setValue(0)
+                }
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                //Handle possible errors.
+            }
+        })
     }
 
     fun startRound(gameKey: String) {
@@ -72,12 +87,15 @@ class GameFirebaseManager @Inject constructor(){
         })
     }
 
-    fun getNumPlayers(gameKey: String,subscriber: Observer<Long>){
-        gameRef.child(gameKey).addValueEventListener(object : ValueEventListener {
+    fun getNumPlayers(game : Game,subscriber: Observer<Long>){
+        gameRef.child(game.keyGame).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var numPlayers = dataSnapshot.child("jugadores").childrenCount
 
                 subscriber.onNext(numPlayers)
+                if(game.numPlayers == numPlayers.toInt()){
+                    subscriber.onComplete()
+                }
 
             }
             override fun onCancelled(databaseError: DatabaseError) {
@@ -86,17 +104,13 @@ class GameFirebaseManager @Inject constructor(){
         })
     }
 
-    fun isGamePrepared(gameKey: String,subscriber: Observer<String>){
-        gameRef.child(gameKey).addValueEventListener(object : ValueEventListener {
+    fun checkGameStatus(gameKey: String, subscriber: Observer<String>){
+        gameRef.child(gameKey).child("estado").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                when(dataSnapshot.child("estado").value){
+                when(dataSnapshot.value){
                     1L -> {
-                        gameRef.child(gameKey).removeEventListener(this)
+                        gameRef.child(gameKey).child("estado").removeEventListener(this)
                         subscriber.onNext(gameKey)
-                        subscriber.onComplete()
-                    }
-                    3L -> {
-                        gameRef.child(gameKey).removeEventListener(this)
                         subscriber.onComplete()
                     }
                     else -> subscriber.onError(Error("Juego no preparado"))
@@ -109,7 +123,7 @@ class GameFirebaseManager @Inject constructor(){
     }
 
     //TODO devolver turno entero
-    fun stateOfTurn(gameKey: String,subscriber: Observer<Pair<String,Long>>){
+    fun stateOfTurn(gameKey: String,subscriber: Observer<Turn>){
         var currentState = -1L
         gameRef.child(gameKey).child(refRounds).orderByKey().limitToLast(1).addChildEventListener(object : ChildEventListener{
             override fun onCancelled(p0: DatabaseError?) {}
@@ -117,22 +131,32 @@ class GameFirebaseManager @Inject constructor(){
             override fun onChildMoved(p0: DataSnapshot?, p1: String?) {}
 
             override fun onChildChanged(child: DataSnapshot?, p1: String?) {
-                val state = child?.child("estado")?.value
-                if (state != null && currentState != state){
-                    val stateLong = state as Long
-                    currentState = stateLong
-                    val pair = Pair(stateLong.toString(), child.key.toLong())
-                    subscriber.onNext(pair)
+                child?.let {
+                    val turnFirebase = it.getValue<TurnFirebase>(TurnFirebase::class.java)
+                    val turnKey = it.key
+
+                   turnFirebase!!.estado?.let{
+                        if(currentState != it){
+                            currentState = it
+                            val turn = turnFirebase.toTurn()
+                            turn.turnNumber = turnKey
+                            subscriber.onNext(turn)
+                        }
+                    }
                 }
             }
 
             override fun onChildAdded(child: DataSnapshot?, p1: String?) {
-                val state = child?.child("estado")?.value
-                if (state != null ){
-                    val stateLong = state as Long
-                    currentState = stateLong
-                    val pair = Pair(stateLong.toString(), child.key.toLong())
-                    subscriber.onNext(pair)
+                child?.let {
+                    val turnFirebase = it.getValue<TurnFirebase>(TurnFirebase::class.java)
+                    val turnKey = it.key
+
+                    turnFirebase!!.estado?.let{
+                        currentState =it
+                        val turn = turnFirebase.toTurn()
+                        turn.turnNumber = turnKey
+                        subscriber.onNext(turn)
+                    }
                 }
 
             }

@@ -3,7 +3,7 @@ package com.mibaldi.cah.ui.viewModels
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.mibaldi.cah.data.models.Game
+import com.mibaldi.cah.data.models.uimodels.Game
 
 
 class MainViewModel: ViewModel() {
@@ -27,7 +27,7 @@ class MainViewModel: ViewModel() {
 
     fun getCurrentGame(): LiveData<Game>{
         if (currentGame.value == null){
-            currentGame.value = Game("","")
+            currentGame.value = Game("", "")
         }
         return currentGame
     }

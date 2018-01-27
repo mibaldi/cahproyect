@@ -1,9 +1,8 @@
 package com.mibaldi.cah.data.models.firebase
 
-import com.google.firebase.database.Exclude
-import com.mibaldi.cah.data.models.Card
-import com.mibaldi.cah.data.models.Player
+import com.mibaldi.cah.data.models.uimodels.Card
+import com.mibaldi.cah.data.models.uimodels.Player
 
-data class PlayerFirebase(var id: String, var cartas: List<Int> = mutableListOf()){
-    fun toPlayer(cards:List<Card>) = Player(id,cards)
+data class PlayerFirebase(var id: String = "", var cartas: List<Int> = mutableListOf()){
+    fun toPlayer(cards:List<Card>) = Player(id, cards)
 }

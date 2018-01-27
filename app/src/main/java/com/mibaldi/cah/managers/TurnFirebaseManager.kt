@@ -2,14 +2,10 @@ package com.mibaldi.cah.managers
 
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.mibaldi.cah.data.models.Game
-import com.mibaldi.cah.data.models.Player
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
-import com.mibaldi.cah.data.models.firebase.PlayerFirebase
-import io.reactivex.Observable
 import io.reactivex.Observer
 
 

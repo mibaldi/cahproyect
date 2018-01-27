@@ -2,12 +2,10 @@ package com.mibaldi.cah.ui.presenters.game
 
 import android.util.Log
 import com.mibaldi.cah.base.presenters.activities.BasePresenter
-import com.mibaldi.cah.data.models.Game
-import com.mibaldi.cah.data.models.Player
-import com.mibaldi.cah.data.models.Turn
+import com.mibaldi.cah.data.models.uimodels.Game
+import com.mibaldi.cah.data.models.uimodels.Turn
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
-import com.mibaldi.cah.ui.activities.GameActivity
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.GameContract
 import io.reactivex.Observer
@@ -53,6 +51,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
 
     fun initGame(){
         mGame?.let {
+            val key = it.keyGame
             gameManager.stateOfTurn(it.keyGame, object : Observer<Turn> {
                 override fun onComplete() {
                 }
@@ -65,7 +64,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
                         mView?.hideProgress()
                         currentState = it
                         mView?.showTurn(it)
-                        mView?.changeState(turn.turnNumber!!)
+                        mView?.changeState(key,turn.turnNumber!!)
                     }
                 }
 

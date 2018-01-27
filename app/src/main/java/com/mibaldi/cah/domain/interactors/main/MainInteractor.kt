@@ -1,6 +1,6 @@
 package com.mibaldi.cah.domain.interactors.main
 
-import com.mibaldi.cah.data.models.Game
+import com.mibaldi.cah.data.models.uimodels.Game
 import io.reactivex.Observer
 
 interface  MainInteractor {

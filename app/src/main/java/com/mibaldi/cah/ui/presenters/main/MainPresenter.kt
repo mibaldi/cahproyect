@@ -4,12 +4,11 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.mibaldi.cah.base.presenters.activities.BasePresenter
-import com.mibaldi.cah.data.models.Game
-import com.mibaldi.cah.data.models.Player
+import com.mibaldi.cah.data.models.uimodels.Game
+import com.mibaldi.cah.data.models.uimodels.Player
 import com.mibaldi.cah.domain.interactors.main.MainInteractor
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
-import com.mibaldi.cah.ui.activities.MainActivity
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.MainContract
 import io.reactivex.disposables.Disposable
@@ -78,7 +77,8 @@ class MainPresenter @Inject constructor(val router: Router,val interactor: MainI
             override fun onComplete() {
             }
         }
-        gameManager.addPlayer(mKey, Player(model.currentUser.value ?: "Pablo"),observer)
+        gameManager.addPlayer(mKey, Player(model.currentUser.value
+                ?: "Pablo"),observer)
     }
 
     override fun showJoinGameAlert() {

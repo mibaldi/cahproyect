@@ -2,8 +2,7 @@ package com.mibaldi.cah.ui.presenters.game.fragments
 
 import android.util.Log
 import com.mibaldi.cah.base.presenters.fragments.BaseFragmentPresenter
-import com.mibaldi.cah.data.models.Player
-import com.mibaldi.cah.managers.GameFirebaseManager
+import com.mibaldi.cah.data.models.uimodels.Player
 import com.mibaldi.cah.managers.TurnFirebaseManager
 import com.mibaldi.cah.router.Router
 import com.mibaldi.cah.ui.viewModels.MainViewModel

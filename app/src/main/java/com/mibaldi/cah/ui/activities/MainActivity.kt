@@ -21,17 +21,12 @@ import org.jetbrains.anko.design.longSnackbar
 
 
 import javax.inject.Inject
-import com.google.android.gms.tasks.OnFailureListener
-import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
-import android.view.View
-import com.google.android.gms.appinvite.AppInviteReferral.getInvitationId
 import com.google.firebase.appinvite.FirebaseAppInvite
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import com.mibaldi.cah.data.models.Game
+import com.mibaldi.cah.data.models.uimodels.Game
 import com.mibaldi.cah.ui.adapters.GameListAdapter
 
 

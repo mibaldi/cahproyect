@@ -11,7 +11,7 @@ object GameContract {
         fun showError(message: String?)
         fun changeNumPlayers(it: Long)
         fun showButton()
-        fun changeState(state: String)
+        fun changeState(gameId: String,state: String)
         fun showTurn(turn: Long)
     }
 

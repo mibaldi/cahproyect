@@ -47,6 +47,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         setContentView(R.layout.activity_game)
         setupToolbar()
         model = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
+
         mPresenter.initialize(model)
         btnInitGame.setOnClickListener{ mPresenter.startRound() }
     }
@@ -99,7 +100,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         tvTurn.text = "Es el turno $turn"
     }
 
-    override fun changeState(state: String) {
+    override fun changeState(idGame: String,state: String) {
         when(state){
             "0" -> replaceFragment(GameFragmentQuestion.newInstance(idGame,"Narrator"),R.id.flGameFragment)
             "1" -> replaceFragment(GameFragmentResponses.newInstance(idGame,"Responses"),R.id.flGameFragment)

@@ -4,7 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import com.mibaldi.cah.base.presenters.activities.BaseMvpPresenter
 import com.mibaldi.cah.base.views.BaseMvpView
-import com.mibaldi.cah.data.models.Game
+import com.mibaldi.cah.data.models.uimodels.Game
 
 
 object MainContract {

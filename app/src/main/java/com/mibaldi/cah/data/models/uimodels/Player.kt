@@ -1,4 +1,4 @@
-package com.mibaldi.cah.data.models
+package com.mibaldi.cah.data.models.uimodels
 
 import com.mibaldi.cah.data.models.firebase.PlayerFirebase
 import com.mibaldi.cah.data.parsers.toCardFirebaseRefList

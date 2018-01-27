@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mibaldi.cah.R
-import com.mibaldi.cah.data.models.Game
+import com.mibaldi.cah.data.models.uimodels.Game
 import kotlinx.android.synthetic.main.item_games_list.view.*
 
 class GameListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

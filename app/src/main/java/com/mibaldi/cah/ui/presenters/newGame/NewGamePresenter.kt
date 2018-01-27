@@ -2,8 +2,8 @@ package com.mibaldi.cah.ui.presenters.newGame
 
 import android.util.Log
 import com.mibaldi.cah.base.presenters.activities.BasePresenter
-import com.mibaldi.cah.data.models.Game
-import com.mibaldi.cah.data.models.Player
+import com.mibaldi.cah.data.models.uimodels.Game
+import com.mibaldi.cah.data.models.uimodels.Player
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
 import com.mibaldi.cah.ui.viewModels.MainViewModel
@@ -20,7 +20,7 @@ class NewGamePresenter @Inject constructor(val router: Router, val gameManager: 
     lateinit var mModel: MainViewModel
     override fun createGame() {
         var userLogued = mModel.currentUser.value ?: "Mikel"
-        mGame = Game(userLogued,"miJuego")
+        mGame = Game(userLogued, "miJuego")
 
         val observer : Observer<String> = object : Observer<String>{
             override fun onSubscribe(d: Disposable) {

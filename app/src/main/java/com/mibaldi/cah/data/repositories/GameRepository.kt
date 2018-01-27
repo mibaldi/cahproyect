@@ -5,11 +5,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.mibaldi.cah.data.models.Game
-import com.mibaldi.cah.data.models.firebase.GameConfigFirebase
+import com.mibaldi.cah.data.models.uimodels.Game
 import com.mibaldi.cah.data.models.firebase.GameFirebase
 import io.reactivex.Observer
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 

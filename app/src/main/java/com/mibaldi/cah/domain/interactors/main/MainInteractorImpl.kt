@@ -1,8 +1,7 @@
 package com.mibaldi.cah.domain.interactors.main
 
 import android.util.Log
-import com.mibaldi.cah.data.models.Game
-import com.mibaldi.cah.data.models.firebase.GameFirebase
+import com.mibaldi.cah.data.models.uimodels.Game
 import com.mibaldi.cah.data.repositories.GameRepository
 import com.mibaldi.cah.data.repositories.UserRepository
 import io.reactivex.Observer

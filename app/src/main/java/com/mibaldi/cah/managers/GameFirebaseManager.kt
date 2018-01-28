@@ -1,13 +1,14 @@
 package com.mibaldi.cah.managers
 
 import com.google.firebase.database.*
-import com.mibaldi.cah.data.models.Game
-import com.mibaldi.cah.data.models.Player
-import com.mibaldi.cah.data.models.Turn
 import com.mibaldi.cah.data.models.firebase.TurnFirebase
+import com.mibaldi.cah.data.models.uimodels.*
+import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 import io.reactivex.Observer
+import io.reactivex.rxkotlin.merge
+
 
 
 @Singleton
@@ -16,6 +17,8 @@ class GameFirebaseManager @Inject constructor(){
 
     companion object {
         var database = FirebaseDatabase.getInstance()
+        val blackCards = database.getReference("cartas/negras")
+        val whiteCards = database.getReference("cartas/blancas")
         val refPlayers = "jugadores"
         val refRounds = "turnos"
         var gameRef = database.getReference("juegos")
@@ -32,7 +35,7 @@ class GameFirebaseManager @Inject constructor(){
                 }
     }
 
-    fun addPlayer(key: String,player: Player,subscriber: Observer<Boolean>) {
+    fun addPlayer(key: String, player: Player, subscriber: Observer<Boolean>) {
         gameRef.child(key).child("$refPlayers/${player.username}").setValue(player.toPlayerFirebase())
                 .addOnCompleteListener{ task ->
                     subscriber.onNext(task.isSuccessful)
@@ -87,7 +90,7 @@ class GameFirebaseManager @Inject constructor(){
         })
     }
 
-    fun getNumPlayers(game : Game,subscriber: Observer<Long>){
+    fun getNumPlayers(game : Game, subscriber: Observer<Long>){
         gameRef.child(game.keyGame).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var numPlayers = dataSnapshot.child("jugadores").childrenCount
@@ -134,13 +137,18 @@ class GameFirebaseManager @Inject constructor(){
                 child?.let {
                     val turnFirebase = it.getValue<TurnFirebase>(TurnFirebase::class.java)
                     val turnKey = it.key
-
-                   turnFirebase!!.estado?.let{
-                        if(currentState != it){
-                            currentState = it
-                            val turn = turnFirebase.toTurn()
-                            turn.turnNumber = turnKey
-                            subscriber.onNext(turn)
+                    turnFirebase?.let {
+                        val turn = turnFirebase.toTurn()
+                        with(it) {
+                            estado?.let {
+                                if (currentState != it) {
+                                    turn.turnNumber = turnKey
+                                    subscriber.onNext(turn)
+                                }
+                            }
+                          /*  pregunta?.let {
+                                getQuestion(it).map { turn.question }
+                            }*/
                         }
                     }
                 }
@@ -150,8 +158,7 @@ class GameFirebaseManager @Inject constructor(){
                 child?.let {
                     val turnFirebase = it.getValue<TurnFirebase>(TurnFirebase::class.java)
                     val turnKey = it.key
-
-                    turnFirebase!!.estado?.let{
+                    turnFirebase?.estado?.let{
                         currentState =it
                         val turn = turnFirebase.toTurn()
                         turn.turnNumber = turnKey
@@ -164,7 +171,49 @@ class GameFirebaseManager @Inject constructor(){
             override fun onChildRemoved(p0: DataSnapshot?) {}
         })
     }
+    fun getQuestion(idQuestion:Long):Observable<Question>{
+       return Observable.create<Question>{
+            val emmiter = it
+            blackCards.child(idQuestion.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                    dataSnapshot?.let {
+                        val question = Question(idQuestion, it.value as String)
+                        emmiter.onNext(question)
+                        emmiter.onComplete()
+                    }.also { emmiter.onError(Error("vacio")) }
+                }
+                override fun onCancelled(p0: DatabaseError?) {
+                    emmiter.onError(Error(p0?.message))
+                }
+            })
+        }
 
+    }
+    fun getAnswer(idAnswer:Long,userId:String):Observable<Answer>{
+       return Observable.create<Answer>{
+            val emitter = it
+            blackCards.child(idAnswer.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                    dataSnapshot?.let {
+                        val answer = Answer(userId,idAnswer,it.value as String)
+                        emitter.onNext(answer)
+                        emitter.onComplete()
+                    }.also { emitter.onError(Error("vacio")) }
+                }
+                override fun onCancelled(p0: DatabaseError?) {
+                    emitter.onError(Error(p0?.message))
+                }
+            })
+        }
+    }
+    fun getListAnswer(pairList: List<Pair<Long,String>>):Observable<Answer>{
+        val observableList = mutableListOf<Observable<Answer>>()
+        for (pair in pairList){
+            observableList.add(getAnswer(pair.first,pair.second))
+        }
+        return observableList.merge()
+
+    }
 }
 
 

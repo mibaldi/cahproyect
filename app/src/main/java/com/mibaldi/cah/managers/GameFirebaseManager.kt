@@ -140,15 +140,20 @@ class GameFirebaseManager @Inject constructor(){
                     turnFirebase?.let {
                         val turn = turnFirebase.toTurn()
                         with(it) {
+                            if (pregunta != null){
+                                val question = getQuestion(pregunta!!)
+                                turn.question = question
+                            }
+                            if (posibles != null){
+                                val posibles = getListAnswer(posibles!!)
+                                turn.possibles = posibles
+                            }
                             estado?.let {
                                 if (currentState != it) {
                                     turn.turnNumber = turnKey
                                     subscriber.onNext(turn)
                                 }
                             }
-                          /*  pregunta?.let {
-                                getQuestion(it).map { turn.question }
-                            }*/
                         }
                     }
                 }
@@ -180,7 +185,7 @@ class GameFirebaseManager @Inject constructor(){
                         val question = Question(idQuestion, it.value as String)
                         emmiter.onNext(question)
                         emmiter.onComplete()
-                    }.also { emmiter.onError(Error("vacio")) }
+                    }
                 }
                 override fun onCancelled(p0: DatabaseError?) {
                     emmiter.onError(Error(p0?.message))
@@ -198,7 +203,7 @@ class GameFirebaseManager @Inject constructor(){
                         val answer = Answer(userId,idAnswer,it.value as String)
                         emitter.onNext(answer)
                         emitter.onComplete()
-                    }.also { emitter.onError(Error("vacio")) }
+                    }
                 }
                 override fun onCancelled(p0: DatabaseError?) {
                     emitter.onError(Error(p0?.message))
@@ -206,13 +211,10 @@ class GameFirebaseManager @Inject constructor(){
             })
         }
     }
-    fun getListAnswer(pairList: List<Pair<Long,String>>):Observable<Answer>{
-        val observableList = mutableListOf<Observable<Answer>>()
-        for (pair in pairList){
-            observableList.add(getAnswer(pair.first,pair.second))
+    fun getListAnswer(pairList: List<Pair<String,Long>>):List<Observable<Answer>>{
+        return pairList.map {
+            getAnswer(it.second,it.first)
         }
-        return observableList.merge()
-
     }
 }
 

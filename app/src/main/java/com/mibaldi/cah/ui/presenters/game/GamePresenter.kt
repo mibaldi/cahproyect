@@ -2,12 +2,15 @@ package com.mibaldi.cah.ui.presenters.game
 
 import android.util.Log
 import com.mibaldi.cah.base.presenters.activities.BasePresenter
+import com.mibaldi.cah.data.models.uimodels.Answer
 import com.mibaldi.cah.data.models.uimodels.Game
+import com.mibaldi.cah.data.models.uimodels.Question
 import com.mibaldi.cah.data.models.uimodels.Turn
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.GameContract
+import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -60,12 +63,50 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
                 }
 
                 override fun onNext(turn: Turn) {
-                    turn.status?.let {
-                        mView?.hideProgress()
-                        currentState = it
-                        mView?.showTurn(it)
-                        mView?.changeState(key,turn.turnNumber!!)
+                    with(turn){
+                        status?.let {
+                            mView?.hideProgress()
+                            currentState = it
+                            mView?.showTurn(it)
+                            mView?.changeState(key,turn.turnNumber!!)
+                        }
+                        possibles?.let {
+                            Observable.zip(possibles,{
+                                Log.d("POSIBLES",it.toString())
+                            }).subscribe(object : Observer<Int>{
+                                override fun onComplete() {
+                                }
+
+                                override fun onSubscribe(d: Disposable) {
+                                }
+
+                                override fun onNext(t: Int) {
+                                    Log.d("OnnextPosibles",t.toString())
+                                }
+
+                                override fun onError(e: Throwable) {
+                                }
+
+                            })
+                        }
+                        question?.subscribe(object : Observer<Question>{
+                            override fun onComplete() {
+                            }
+
+                            override fun onSubscribe(d: Disposable) {
+                            }
+
+                            override fun onNext(t: Question) {
+                                Log.d("OnnextQuestion",question.toString())
+
+                            }
+
+                            override fun onError(e: Throwable) {
+                            }
+
+                        })
                     }
+
                 }
 
                 override fun onError(e: Throwable) {

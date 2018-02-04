@@ -98,6 +98,7 @@ class GameFirebaseManager @Inject constructor(){
                 subscriber.onNext(numPlayers)
                 if(game.numPlayers == numPlayers.toInt()){
                     subscriber.onComplete()
+                    gameRef.child(game.keyGame).removeEventListener(this)
                 }
 
             }
@@ -135,7 +136,7 @@ class GameFirebaseManager @Inject constructor(){
 
             override fun onChildChanged(child: DataSnapshot?, p1: String?) {
                 child?.let {
-                    val turnFirebase = it.getValue<TurnFirebase>(TurnFirebase::class.java)
+                    val turnFirebase : TurnFirebase? = it.getValue<TurnFirebase>(TurnFirebase::class.java)
                     val turnKey = it.key
                     turnFirebase?.let {
                         val turn = turnFirebase.toTurn()
@@ -161,7 +162,7 @@ class GameFirebaseManager @Inject constructor(){
 
             override fun onChildAdded(child: DataSnapshot?, p1: String?) {
                 child?.let {
-                    val turnFirebase = it.getValue<TurnFirebase>(TurnFirebase::class.java)
+                    val turnFirebase : TurnFirebase? = it.getValue<TurnFirebase>(TurnFirebase::class.java)
                     val turnKey = it.key
                     turnFirebase?.estado?.let{
                         currentState =it

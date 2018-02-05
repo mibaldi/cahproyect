@@ -9,9 +9,11 @@ import com.mibaldi.cah.data.models.uimodels.Turn
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
 import com.mibaldi.cah.ui.viewModels.MainViewModel
+import com.mibaldi.cah.ui.viewModels.TurnViewModel
 import com.mibaldi.cah.ui.views.GameContract
 import io.reactivex.Observable
 import io.reactivex.Observer
+import android.arch.lifecycle.Observer
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -22,32 +24,69 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
     var mGame : Game? = null
     var mUser: String? = null
     lateinit var mModel: MainViewModel
+    lateinit var mTurnModel: TurnViewModel
     var currentState = -1L
-    override fun initialize(model: MainViewModel) {
+    val observerTurnNumber = android.arch.lifecycle.Observer<String> { turnNumber ->
+        turnNumber?.let {
+            mView?.showTurn(it)
+        }
+    }
+    val observerNarrator = android.arch.lifecycle.Observer<String> { narrator ->
+        narrator?.let {
+            mView?.showNarrator(it)
+        }
+    }
+    val observerStatus = android.arch.lifecycle.Observer<Long> { status ->
+        status?.let {
+            mView?.showStatus(it)
+        }
+    }
+    val observerQuestion = android.arch.lifecycle.Observer<Question> { question ->
+        question?.let {
+            mView?.showQuestion(it)
+        }
+    }
+    val observerPossibles = android.arch.lifecycle.Observer<List<Answer>> { possibles ->
+        possibles?.let {
+            mView?.showPossibles(it)
+        }
+    }
+    val observerWinner = android.arch.lifecycle.Observer<String> { winner ->
+        winner?.let {
+            mView?.showWinner(it)
+        }
+    }
+
+    override fun initialize(model: MainViewModel,turn: TurnViewModel) {
+        initGameModel(model)
+
+        mTurnModel = turn
+    }
+
+    private fun initGameModel(model: MainViewModel) {
         mModel = model
         mGame = mModel.currentGame.value
         mUser = mModel.currentUser.value
 
-        val observer : Observer<Long> = object : Observer<Long> {
-            override fun onSubscribe(d: Disposable) {
-                Log.d("Subscriber","New Subscriber")
-            }
-
-            override fun onNext(numPlayers: Long) {
-                mView?.changeNumPlayers(numPlayers)
-            }
-
-            override fun onError(e: Throwable) {
-                Log.d("Subscriber",e.message)
-            }
-
-            override fun onComplete() {
-                mView?.showProgress()
-            }
-
-        }
         mGame?.let {
-            gameManager.getNumPlayers(it,observer)
+            gameManager.getNumPlayers(it, object : io.reactivex.Observer<Long> {
+                override fun onSubscribe(d: Disposable) {
+                    Log.d("Subscriber", "New Subscriber")
+                }
+
+                override fun onNext(numPlayers: Long) {
+                    mView?.changeNumPlayers(numPlayers)
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.d("Subscriber", e.message)
+                }
+
+                override fun onComplete() {
+                    mView?.showProgress()
+                }
+
+            })
             initGame()
         }
     }
@@ -55,7 +94,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
     fun initGame(){
         mGame?.let {
             val key = it.keyGame
-            gameManager.stateOfTurn(it.keyGame, object : Observer<Turn> {
+            gameManager.stateOfTurn(it.keyGame, object : io.reactivex.Observer<Turn> {
                 override fun onComplete() {
                 }
 
@@ -73,7 +112,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
                         possibles?.let {
                             Observable.zip(possibles,{
                                  it.map { it as Answer }
-                            }).subscribe(object : Observer<List<Answer>>{
+                            }).subscribe(object : io.reactivex.Observer<List<Answer>> {
                                 override fun onComplete() {
                                 }
 
@@ -88,7 +127,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
 
                             })
                         }
-                        question?.subscribe(object : Observer<Question>{
+                        question?.subscribe(object : io.reactivex.Observer<Question> {
                             override fun onComplete() {
                             }
 

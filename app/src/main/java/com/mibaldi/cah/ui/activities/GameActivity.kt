@@ -2,6 +2,7 @@ package com.mibaldi.cah.ui.activities
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -10,12 +11,15 @@ import android.view.View
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
+import com.mibaldi.cah.data.models.uimodels.Answer
+import com.mibaldi.cah.data.models.uimodels.Question
 import com.mibaldi.cah.ui.fragments.GameFragmentQuestion
 import com.mibaldi.cah.ui.fragments.GameFragmentResponses
 import com.mibaldi.cah.ui.fragments.GameFragmentResult
 import com.mibaldi.cah.ui.fragments.GameFragmentWinner
 import com.mibaldi.cah.ui.presenters.game.GamePresenter
 import com.mibaldi.cah.ui.viewModels.MainViewModel
+import com.mibaldi.cah.ui.viewModels.TurnViewModel
 import com.mibaldi.cah.ui.views.GameContract
 import com.mibaldi.cah.utils.ViewModelFactory
 import com.mibaldi.cah.utils.addFragment
@@ -30,6 +34,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         GamePresenter>(),
         GameContract.View {
 
+
     companion object {
         val REQUEST_INVITE = 209
     }
@@ -40,6 +45,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var model: MainViewModel
+    lateinit var turnModel: TurnViewModel
     private var dialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +53,9 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         setContentView(R.layout.activity_game)
         setupToolbar()
         model = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
+        turnModel = ViewModelProviders.of(this).get(TurnViewModel::class.java)
 
-        mPresenter.initialize(model)
+        mPresenter.initialize(model,turnModel)
         btnInitGame.setOnClickListener{ mPresenter.startRound() }
     }
 
@@ -108,6 +115,22 @@ class GameActivity : BaseMvpActivity<GameContract.View,
             "3" -> replaceFragment(GameFragmentWinner.newInstance(idGame,"Winner"),R.id.flGameFragment)
         }
     }
+    override fun observeTurnNumber(observerTurnNumber: Observer<String>)
+            = turnModel.turnNumber.observe(this,observerTurnNumber)
 
+    override fun observeNarrator(observerNarrator: Observer<String>)
+            = turnModel.narrator.observe(this,observerNarrator)
+
+    override fun observeStatus(observerStatus: Observer<Long>)
+            = turnModel.status.observe(this,observerStatus)
+
+    override fun observeQuestion(observerQuestion: Observer<Question>)
+            = turnModel.question.observe(this,observerQuestion)
+
+    override fun observePossibles(observerPossibles: Observer<List<Answer>>)
+            = turnModel.possibles.observe(this,observerPossibles)
+
+    override fun observeWinner(observerWinner: Observer<String>)
+            = turnModel.winner.observe(this,observerWinner)
 
 }

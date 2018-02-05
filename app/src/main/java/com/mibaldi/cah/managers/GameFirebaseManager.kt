@@ -136,18 +136,23 @@ class GameFirebaseManager @Inject constructor(){
 
             override fun onChildChanged(child: DataSnapshot?, p1: String?) {
                 child?.let {
-                    val turnFirebase : TurnFirebase? = it.getValue<TurnFirebase>(TurnFirebase::class.java)
+                    val turnFirebase = it.getValue<TurnFirebase>(TurnFirebase::class.java)
                     val turnKey = it.key
                     turnFirebase?.let {
                         val turn = turnFirebase.toTurn()
                         with(it) {
-                            if (pregunta != null){
+                            if (pregunta != null && estado == 0L){
                                 val question = getQuestion(pregunta!!)
                                 turn.question = question
                             }
-                            if (posibles != null){
-                                val posibles = getListAnswer(posibles!!)
-                                turn.possibles = posibles
+                            if (posibles != null && estado == 1L){
+                                posibles?.toList().let {
+                                    val posibles = getListAnswer(it!!)
+                                    turn.possibles = posibles
+                                }
+                            }
+                            if (ganador != null && estado == 2L){
+                                turn.winner = ganador
                             }
                             estado?.let {
                                 if (currentState != it) {
@@ -162,7 +167,7 @@ class GameFirebaseManager @Inject constructor(){
 
             override fun onChildAdded(child: DataSnapshot?, p1: String?) {
                 child?.let {
-                    val turnFirebase : TurnFirebase? = it.getValue<TurnFirebase>(TurnFirebase::class.java)
+                    val turnFirebase = it.getValue<TurnFirebase>(TurnFirebase::class.java)
                     val turnKey = it.key
                     turnFirebase?.estado?.let{
                         currentState =it
@@ -198,7 +203,7 @@ class GameFirebaseManager @Inject constructor(){
     fun getAnswer(idAnswer:Long,userId:String):Observable<Answer>{
        return Observable.create<Answer>{
             val emitter = it
-            blackCards.child(idAnswer.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
+            whiteCards.child(idAnswer.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
                     dataSnapshot?.let {
                         val answer = Answer(userId,idAnswer,it.value as String)

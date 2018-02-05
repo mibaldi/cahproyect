@@ -72,15 +72,14 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
                         }
                         possibles?.let {
                             Observable.zip(possibles,{
-                                Log.d("POSIBLES",it.toString())
-                            }).subscribe(object : Observer<Int>{
+                                 it.map { it as Answer }
+                            }).subscribe(object : Observer<List<Answer>>{
                                 override fun onComplete() {
                                 }
 
                                 override fun onSubscribe(d: Disposable) {
                                 }
-
-                                override fun onNext(t: Int) {
+                                override fun onNext(t: List<Answer>) {
                                     Log.d("OnnextPosibles",t.toString())
                                 }
 
@@ -98,6 +97,7 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
 
                             override fun onNext(t: Question) {
                                 Log.d("OnnextQuestion",question.toString())
+
 
                             }
 

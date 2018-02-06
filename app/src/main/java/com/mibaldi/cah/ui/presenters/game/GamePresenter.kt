@@ -14,10 +14,15 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
+import android.net.Uri
+import com.mibaldi.cah.ui.activities.GameActivity
+import com.google.firebase.dynamiclinks.DynamicLink
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+
+
 
 
 class GamePresenter @Inject constructor(val router: Router, val gameManager: GameFirebaseManager): BasePresenter<GameContract.View>(), GameContract.Presenter {
-
 
     var mGame : Game? = null
     var mUser: String? = null
@@ -113,6 +118,25 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
                 }
 
             })
+        }
+    }
+
+    override fun invitePlayers() {
+        mGame?.let { game ->
+            mView?.let {
+                FirebaseDynamicLinks.getInstance().createDynamicLink()
+                        .setLink(Uri.parse("http://mibaldi.com/game?key=${game.keyGame}"))
+                        .setDynamicLinkDomain("kjj5z.app.goo.gl")
+                        .setAndroidParameters(
+                                DynamicLink.AndroidParameters.Builder("com.mibaldi.cah").build())
+                        .buildShortDynamicLink()
+                        .addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                val uriDeeplink = task.result.shortLink
+                                router.inviteGame(it as GameActivity,uriDeeplink)
+                            }
+                        }
+            }
         }
     }
 

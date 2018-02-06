@@ -6,6 +6,8 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.mibaldi.cah.R
@@ -56,6 +58,21 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.game, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_invite -> {
+                mPresenter.invitePlayers()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
 

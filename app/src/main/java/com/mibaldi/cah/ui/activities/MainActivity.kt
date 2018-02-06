@@ -2,6 +2,8 @@ package com.mibaldi.cah.ui.activities
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -28,6 +30,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.mibaldi.cah.data.models.uimodels.Game
 import com.mibaldi.cah.ui.adapters.GameListAdapter
+import org.jetbrains.anko.toast
 
 
 class MainActivity : BaseMvpActivity<MainContract.View,
@@ -53,7 +56,7 @@ class MainActivity : BaseMvpActivity<MainContract.View,
         invites()
         rvGameList.setHasFixedSize(true);
         val mLayoutManager = LinearLayoutManager(this);
-        rvGameList.layoutManager = mLayoutManager;
+        rvGameList.layoutManager = mLayoutManager
         adapter = GameListAdapter()
 
         rvGameList.adapter = adapter
@@ -61,31 +64,17 @@ class MainActivity : BaseMvpActivity<MainContract.View,
 
 
     private fun invites() {
-        FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
-                .addOnSuccessListener(this, OnSuccessListener { data ->
-                    if (data == null) {
-                        Log.d(BaseMvpActivity.TAG, "getInvitation: no data")
-                        return@OnSuccessListener
-                    }
-                    // Get the deep link
-                    val deepLink = data.link
-                    // Extract invite
-                    val invite = FirebaseAppInvite.getInvitation(data)
-                    if (invite != null) {
-                        val invitationId = invite.invitationId
-                    }
-                    // Handle the deep link
-                    // [START_EXCLUDE]
-                    Log.d(BaseMvpActivity.TAG, "deepLink:" + deepLink!!)
-                    mPresenter.joinGame(deepLink.toString().split(".com/")[1])
-                    /* val intent = Intent(Intent.ACTION_VIEW)
-                        intent.`package` = packageName
-                        intent.data = deepLink
 
-                        startActivity(intent)*/
-                    // [END_EXCLUDE]
-                })
-                .addOnFailureListener(this) { e -> Log.w(BaseMvpActivity.TAG, "getDynamicLink:onFailure", e) }
+        val appLinkData = intent.data
+
+        if(appLinkData != null){
+            val uriString = appLinkData.toString()
+            val uri = Uri.parse(uriString)
+
+            val gameKey = uri.getQueryParameter("key")
+            toast(gameKey).show()
+        }
+
     }
 
     override fun showCurrentUser(user: String) {

@@ -19,5 +19,6 @@ object GameContract {
         fun initialize(model: MainViewModel)
         fun changeStateRound()
         fun startRound()
+        fun invitePlayers()
     }
 }

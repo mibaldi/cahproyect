@@ -35,6 +35,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         GameContract.View {
 
 
+
     companion object {
         val REQUEST_INVITE = 209
     }
@@ -53,7 +54,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         setContentView(R.layout.activity_game)
         setupToolbar()
         model = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
-        turnModel = ViewModelProviders.of(this).get(TurnViewModel::class.java)
+        turnModel = ViewModelProviders.of(this,viewModelFactory).get(TurnViewModel::class.java)
 
         mPresenter.initialize(model,turnModel)
         btnInitGame.setOnClickListener{ mPresenter.startRound() }
@@ -103,18 +104,6 @@ class GameActivity : BaseMvpActivity<GameContract.View,
             }
         }
     }
-    override fun showTurn(turn: Long) {
-        tvTurn.text = "Es el turno $turn"
-    }
-
-    override fun changeState(idGame: String,state: String) {
-        when(state){
-            "0" -> replaceFragment(GameFragmentQuestion.newInstance(idGame,"Narrator"),R.id.flGameFragment)
-            "1" -> replaceFragment(GameFragmentResponses.newInstance(idGame,"Responses"),R.id.flGameFragment)
-            "2" -> replaceFragment(GameFragmentResult.newInstance(idGame,"Results"),R.id.flGameFragment)
-            "3" -> replaceFragment(GameFragmentWinner.newInstance(idGame,"Winner"),R.id.flGameFragment)
-        }
-    }
     override fun observeTurnNumber(observerTurnNumber: Observer<String>)
             = turnModel.turnNumber.observe(this,observerTurnNumber)
 
@@ -124,13 +113,26 @@ class GameActivity : BaseMvpActivity<GameContract.View,
     override fun observeStatus(observerStatus: Observer<Long>)
             = turnModel.status.observe(this,observerStatus)
 
-    override fun observeQuestion(observerQuestion: Observer<Question>)
-            = turnModel.question.observe(this,observerQuestion)
 
-    override fun observePossibles(observerPossibles: Observer<List<Answer>>)
-            = turnModel.possibles.observe(this,observerPossibles)
+    override fun showTurn(turn: String) {
+        tvTurn.text = "Es el turno $turn"
+    }
 
-    override fun observeWinner(observerWinner: Observer<String>)
-            = turnModel.winner.observe(this,observerWinner)
+    override fun showNarrator(narrator: String) {
+        tvNarrator.text = "El narrador es $narrator"
+    }
 
+    override fun showStatus(idGame: String,status: Long) {
+        this.idGame = idGame
+        when(status){
+            0L -> replaceFragment(GameFragmentQuestion.newInstance(idGame,"Narrator"),R.id.flGameFragment)
+            1L -> replaceFragment(GameFragmentResponses.newInstance(idGame,"Responses"),R.id.flGameFragment)
+            2L -> replaceFragment(GameFragmentResult.newInstance(idGame,"Results"),R.id.flGameFragment)
+            3L -> {
+                replaceFragment(GameFragmentWinner.newInstance(idGame,"Winner"),R.id.flGameFragment)
+                turnModel.clear()
+            }
+        }
+        tvStatus.text = "El estado del turno es $status"
+    }
 }

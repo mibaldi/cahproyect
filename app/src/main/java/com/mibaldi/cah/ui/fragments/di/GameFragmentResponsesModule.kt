@@ -1,6 +1,7 @@
 package com.mibaldi.cah.ui.fragments.di
 
 import com.mibaldi.cah.managers.GameFirebaseManager
+import com.mibaldi.cah.managers.TurnFirebaseManager
 import com.mibaldi.cah.router.Router
 import com.mibaldi.cah.ui.fragments.GameFragmentResponses
 import com.mibaldi.cah.ui.presenters.game.fragments.GameFragmentResponsesPresenter
@@ -21,8 +22,8 @@ abstract class GameFragmentResponsesModule {
 
         @JvmStatic
         @Provides
-        fun provideGameFragmentResponsesPresenter(router: Router, gameManager : GameFirebaseManager): GameFragmentResponsesPresenter {
-            return GameFragmentResponsesPresenter(router, gameManager)
+        fun provideGameFragmentResponsesPresenter(router: Router, turnManager : TurnFirebaseManager): GameFragmentResponsesPresenter {
+            return GameFragmentResponsesPresenter(router, turnManager)
         }
     }
 

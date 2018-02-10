@@ -16,14 +16,18 @@ class GameFragmentQuestionPresenter @Inject constructor(val router: Router, val 
 
 
     lateinit var mIdGame : String
-    lateinit var mModel: MainViewModel
     lateinit var questionList: List<Long>
     override fun initialize(idGame: String, type: String) {
         initGame()
         mIdGame = idGame
-        if (Player.Type.Narrator.name == type){
+        getQuestions(type, idGame)
+
+    }
+
+    private fun getQuestions(type: String, idGame: String) {
+        if (Player.Type.Narrator.name == type) {
             mView?.setType(type)
-            turnManager.getQuestions(idGame,object :Observer<List<Long>>{
+            turnManager.getQuestions(idGame, object : Observer<List<Long>> {
                 override fun onComplete() {
                     mView?.showQuestions(questionList)
                 }
@@ -32,7 +36,7 @@ class GameFragmentQuestionPresenter @Inject constructor(val router: Router, val 
                 }
 
                 override fun onNext(qList: List<Long>) {
-                  questionList  = qList
+                    questionList = qList
                 }
 
                 override fun onError(e: Throwable) {
@@ -40,11 +44,11 @@ class GameFragmentQuestionPresenter @Inject constructor(val router: Router, val 
 
             })
 
-        }else {
+        } else {
 
         }
-
     }
+
     override fun setQuestion(id_: Int) {
         turnManager.setQuestion(mIdGame,id_.toLong(),object : Observer<Boolean>{
             override fun onComplete() {

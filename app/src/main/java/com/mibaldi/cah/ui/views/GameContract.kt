@@ -15,14 +15,14 @@ object GameContract {
         fun showError(message: String?)
         fun changeNumPlayers(it: Long)
         fun showButton()
-        fun changeState(gameId: String,state: String)
-        fun showTurn(turn: String)
+
         fun observeTurnNumber(observerTurnNumber : Observer<String>)
         fun observeNarrator(observerNarrator : Observer<String>)
         fun observeStatus(observerStatus : Observer<Long>)
-        fun observeQuestion(observerQuestion : Observer<Question>)
-        fun observePossibles(observerPossibles : Observer<List<Answer>>)
-        fun observeWinner(observerWinner : Observer<String>)
+
+        fun showTurn(turn: String)
+        fun showNarrator(narrator: String)
+        fun showStatus(idGame: String,status: Long)
     }
 
     interface Presenter : BaseMvpPresenter<View> {

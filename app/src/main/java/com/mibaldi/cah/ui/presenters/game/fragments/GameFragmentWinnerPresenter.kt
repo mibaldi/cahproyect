@@ -1,6 +1,7 @@
 package com.mibaldi.cah.ui.presenters.game.fragments
 
 import com.mibaldi.cah.base.presenters.fragments.BaseFragmentPresenter
+import com.mibaldi.cah.data.models.uimodels.Answer
 import com.mibaldi.cah.managers.GameFirebaseManager
 import com.mibaldi.cah.router.Router
 import com.mibaldi.cah.ui.viewModels.MainViewModel
@@ -12,19 +13,15 @@ class GameFragmentWinnerPresenter @Inject constructor(val router: Router, val ga
 
 
     lateinit var mIdGame : String
-    lateinit var mModel: MainViewModel
-    override fun initialize(idGame: String, type: String) {
-        initGame()
-        mIdGame = idGame
-        mView?.setType(type)
-    }
-
-    fun initGame(){
-    }
-    fun changeStateRound(){
-
-        if (mIdGame.isNotEmpty()){
-            gameManager.startRound(mIdGame)
+    val observerWinner = android.arch.lifecycle.Observer<String> { winner ->
+        winner?.let {
+            mView?.showWinner(it)
         }
     }
+    override fun initialize(idGame: String, type: String) {
+        mIdGame = idGame
+        mView?.observeWinner(observerWinner)
+    }
+
+
 }

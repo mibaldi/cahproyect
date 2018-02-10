@@ -130,12 +130,7 @@ class MainActivity : BaseMvpActivity<MainContract.View,
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_newGame -> { mPresenter.goToNewGame()}
-            R.id.nav_joinGame -> { mPresenter.showJoinGameAlert()
-            }
-            /*R.id.nav_ownworkstation -> { mPresenter.goToManageOwnWorkstation() }
-            R.id.nav_workstationlist -> { mPresenter.goToFillWorkstation() }
-            R.id.nav_share -> {}
-            R.id.nav_send -> {}*/
+            R.id.nav_joinGame -> { mPresenter.showJoinGameAlert() }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true

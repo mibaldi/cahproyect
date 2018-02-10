@@ -10,9 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
-        android:id="@+id/tvType"
+        android:id="@+id/tvQuestion"
         android:gravity="center"
-        android:text="TURN TYPE"
+        android:hint="Pregunta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tvResponses"
+        android:gravity="center"
+        android:hint="Pregunta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

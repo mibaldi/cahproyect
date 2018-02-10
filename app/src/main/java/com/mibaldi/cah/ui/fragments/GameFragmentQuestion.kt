@@ -14,9 +14,14 @@ import kotlinx.android.synthetic.main.fragment_game_question.*
 import javax.inject.Inject
 import android.widget.Toast
 import android.R.interpolator.linear
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.widget.Button
 import android.widget.LinearLayout
+import com.mibaldi.cah.ui.viewModels.TurnViewModel
+import com.mibaldi.cah.utils.ViewModelFactory
 
 
 class GameFragmentQuestion: BaseMvpFragment<GameFragmentContract.FragmentQuestionView, GameFragmentQuestionPresenter>(),GameFragmentContract.FragmentQuestionView{
@@ -24,7 +29,9 @@ class GameFragmentQuestion: BaseMvpFragment<GameFragmentContract.FragmentQuestio
 
     @Inject
     override lateinit var mPresenter : GameFragmentQuestionPresenter
-
+    @Inject
+    lateinit var viewModelFactory:ViewModelFactory
+    lateinit var mTurnViewModel: TurnViewModel
     override fun getMyActivity(): AppCompatActivity {
         return activity as GameActivity
     }
@@ -36,6 +43,7 @@ class GameFragmentQuestion: BaseMvpFragment<GameFragmentContract.FragmentQuestio
         super.onViewCreated(view, savedInstanceState)
         val type = arguments.getString("type")
         val idGame = arguments.getString("idGame")
+        mTurnViewModel = ViewModelProviders.of(this,viewModelFactory).get(TurnViewModel::class.java)
         mPresenter.initialize(idGame,type)
     }
 

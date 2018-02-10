@@ -12,8 +12,6 @@ import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.viewModels.TurnViewModel
 import com.mibaldi.cah.ui.views.GameContract
 import io.reactivex.Observable
-import io.reactivex.Observer
-import android.arch.lifecycle.Observer
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -38,35 +36,29 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
     }
     val observerStatus = android.arch.lifecycle.Observer<Long> { status ->
         status?.let {
-            mView?.showStatus(it)
-        }
-    }
-    val observerQuestion = android.arch.lifecycle.Observer<Question> { question ->
-        question?.let {
-            mView?.showQuestion(it)
-        }
-    }
-    val observerPossibles = android.arch.lifecycle.Observer<List<Answer>> { possibles ->
-        possibles?.let {
-            mView?.showPossibles(it)
-        }
-    }
-    val observerWinner = android.arch.lifecycle.Observer<String> { winner ->
-        winner?.let {
-            mView?.showWinner(it)
+            if (idGame.isNotEmpty()){
+                mView?.showStatus(idGame,it)
+            }
+
         }
     }
 
     override fun initialize(model: MainViewModel,turn: TurnViewModel) {
-        initGameModel(model)
-
-        mTurnModel = turn
+        initGameModel(model,turn)
     }
 
-    private fun initGameModel(model: MainViewModel) {
+    private fun initGameModel(model: MainViewModel,turn:TurnViewModel) {
         mModel = model
         mGame = mModel.currentGame.value
         mUser = mModel.currentUser.value
+        mTurnModel = turn
+        mView?.let {
+            with(it){
+                observeNarrator(observerNarrator)
+                observeStatus(observerStatus)
+                observeTurnNumber(observerTurnNumber)
+            }
+        }
 
         mGame?.let {
             gameManager.getNumPlayers(it, object : io.reactivex.Observer<Long> {
@@ -91,9 +83,11 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
         }
     }
 
+    private lateinit var idGame: String
+
     fun initGame(){
         mGame?.let {
-            val key = it.keyGame
+            idGame = it.keyGame
             gameManager.stateOfTurn(it.keyGame, object : io.reactivex.Observer<Turn> {
                 override fun onComplete() {
                 }
@@ -106,8 +100,14 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
                         status?.let {
                             mView?.hideProgress()
                             currentState = it
-                            mView?.showTurn(it)
-                            mView?.changeState(key,turn.turnNumber!!)
+                            mTurnModel.status.value = it
+                            mTurnModel.turnNumber.value = turnNumber
+                        }
+                        narrator.let{
+                            mTurnModel.narrator.value = it
+                        }
+                        winner?.let {
+                            mTurnModel.winner.value = it
                         }
                         possibles?.let {
                             Observable.zip(possibles,{
@@ -118,8 +118,9 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
 
                                 override fun onSubscribe(d: Disposable) {
                                 }
-                                override fun onNext(t: List<Answer>) {
-                                    Log.d("OnnextPosibles",t.toString())
+                                override fun onNext(posiblesList: List<Answer>) {
+                                    mTurnModel.possibles.value = posiblesList
+                                    Log.d("OnnextPosibles",posiblesList.toString())
                                 }
 
                                 override fun onError(e: Throwable) {
@@ -134,10 +135,9 @@ class GamePresenter @Inject constructor(val router: Router, val gameManager: Gam
                             override fun onSubscribe(d: Disposable) {
                             }
 
-                            override fun onNext(t: Question) {
+                            override fun onNext(question: Question) {
+                                mTurnModel.question.value = question
                                 Log.d("OnnextQuestion",question.toString())
-
-
                             }
 
                             override fun onError(e: Throwable) {

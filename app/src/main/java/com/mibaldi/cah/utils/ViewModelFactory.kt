@@ -3,6 +3,7 @@ package com.mibaldi.cah.utils
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.mibaldi.cah.ui.viewModels.MainViewModel
+import com.mibaldi.cah.ui.viewModels.TurnViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,6 +17,14 @@ class ViewModelFactory @Inject constructor() : ViewModelProvider.Factory {
                 return getViewModel(key) as T
             } else {
                 addViewModel(key, MainViewModel())
+                return getViewModel(key) as T
+            }
+        }else if (modelClass.isAssignableFrom(TurnViewModel::class.java)){
+            val key = "TurnViewModel"
+            if(hashMapViewModel.containsKey(key)){
+                return getViewModel(key) as T
+            } else {
+                addViewModel(key, TurnViewModel())
                 return getViewModel(key) as T
             }
         }

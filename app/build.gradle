@@ -43,6 +43,10 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation "org.jetbrains.anko:anko-design:$anko_version"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // Security
+    implementation 'com.scottyab:secure-preferences-lib:0.1.4'
+
     // Firebase
     implementation "com.google.firebase:firebase-core:$firebase_version"
     implementation "com.google.firebase:firebase-database:$firebase_version"

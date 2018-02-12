@@ -17,10 +17,7 @@ import com.google.android.gms.appinvite.AppInviteInvitation
 import com.mibaldi.cah.R
 import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.app.Activity.RESULT_OK
-
-
-
-
+import com.mibaldi.cah.ui.activities.MainActivity
 
 
 @Singleton
@@ -47,6 +44,12 @@ class Router @Inject constructor(val applicationContext:Context){
         }
     }
 
+    fun goToMain() {
+        with(applicationContext){
+            startActivity(intentFor<MainActivity>().newTask())
+        }
+    }
+
     fun sharedWhatsapp(activity: GameActivity,mKey : String) {
         with(activity) {
 
@@ -70,7 +73,4 @@ class Router @Inject constructor(val applicationContext:Context){
             }*/
         }
     }
-
-
-
 }

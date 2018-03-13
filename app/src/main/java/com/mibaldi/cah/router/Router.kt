@@ -12,6 +12,8 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 import javax.inject.Singleton
 
+import com.mibaldi.cah.ui.activities.MainActivity
+
 @Singleton
 class Router @Inject constructor(val applicationContext: Context) {
 
@@ -34,6 +36,12 @@ class Router @Inject constructor(val applicationContext: Context) {
     fun gotToGame(mKey: String) {
         with(applicationContext) {
             startActivity(intentFor<GameActivity>("idGame" to mKey).newTask())
+        }
+    }
+
+    fun goToMain() {
+        with(applicationContext){
+            startActivity(intentFor<MainActivity>().newTask())
         }
     }
 
@@ -62,6 +70,4 @@ class Router @Inject constructor(val applicationContext: Context) {
 
         }
     }
-
-
 }

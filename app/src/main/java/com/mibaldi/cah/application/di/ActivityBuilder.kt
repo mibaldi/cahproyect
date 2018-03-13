@@ -6,6 +6,7 @@ import dagger.Module
 import com.mibaldi.cah.ui.fragments.di.GameFragmentsProvider
 import com.mibaldi.cah.ui.presenters.configuration.ConfigurationModule
 import com.mibaldi.cah.ui.presenters.game.GameModule
+import com.mibaldi.cah.ui.presenters.login.LoginModule
 import com.mibaldi.cah.ui.presenters.main.MainModule
 import com.mibaldi.cah.ui.presenters.newGame.NewGameModule
 import dagger.android.ContributesAndroidInjector
@@ -22,6 +23,9 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = arrayOf(NewGameModule::class))
     abstract fun NewGameActivity(): NewGameActivity
+
+    @ContributesAndroidInjector(modules = arrayOf(LoginModule::class))
+    abstract fun LoginActivity(): LoginActivity
 
     @ContributesAndroidInjector(modules = arrayOf(
             GameModule::class,

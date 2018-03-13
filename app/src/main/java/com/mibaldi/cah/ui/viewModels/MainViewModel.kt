@@ -11,7 +11,7 @@ class MainViewModel: ViewModel() {
     var currentUser = MutableLiveData<String>()
     fun getCurrentUser(): LiveData<String> {
         if (currentUser.value == null){
-            currentUser.value = "Mikel"
+            currentUser.value = "DEFAULT"
         }
         return currentUser
     }
@@ -22,7 +22,7 @@ class MainViewModel: ViewModel() {
 
     var currentGame = MutableLiveData<Game>()
     fun setCurrentGame(game : Game){
-        currentGame.value = game;
+        currentGame.value = game
     }
 
     fun getCurrentGame(): LiveData<Game>{

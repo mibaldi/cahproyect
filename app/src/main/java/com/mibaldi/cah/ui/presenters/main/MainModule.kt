@@ -11,7 +11,6 @@ import dagger.Binds
 import dagger.Module
 import com.mibaldi.cah.ui.activities.MainActivity
 import com.mibaldi.cah.ui.views.MainContract
-import com.mibaldi.cah.utils.ViewModelFactory
 import dagger.Provides
 
 
@@ -34,6 +33,6 @@ abstract class MainModule {
     }
 
     @Binds
-    abstract fun provideMainActivity(mainActivity: MainActivity): BaseMvpActivity<MainContract.View,MainPresenter>
+    abstract fun provideMainActivity(mainActivity: MainActivity): BaseMvpActivity<MainContract.View, MainPresenter>
 
 }

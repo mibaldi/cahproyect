@@ -2,8 +2,6 @@ package com.mibaldi.cah.ui.activities
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -13,7 +11,6 @@ import android.view.MenuItem
 import com.mibaldi.cah.R
 import com.mibaldi.cah.base.activities.BaseMvpActivity
 import com.mibaldi.cah.ui.dialogs.JoinGameDialog
-import com.mibaldi.cah.ui.presenters.main.MainPresenter
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.MainContract
 import com.mibaldi.cah.utils.ViewModelFactory
@@ -24,12 +21,10 @@ import org.jetbrains.anko.design.longSnackbar
 
 import javax.inject.Inject
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
-import com.google.firebase.appinvite.FirebaseAppInvite
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.mibaldi.cah.data.models.uimodels.Game
 import com.mibaldi.cah.ui.adapters.GameListAdapter
+import com.mibaldi.cah.ui.presenters.main.MainPresenter
+import kotlinx.android.synthetic.main.actionbar_toolbar.*
 import org.jetbrains.anko.toast
 
 
@@ -53,7 +48,6 @@ class MainActivity : BaseMvpActivity<MainContract.View,
         mPresenter.initializer(model)
         mPresenter.getGameList()
         setupToolbar()
-        invites()
         rvGameList.setHasFixedSize(true);
         val mLayoutManager = LinearLayoutManager(this);
         rvGameList.layoutManager = mLayoutManager
@@ -62,20 +56,6 @@ class MainActivity : BaseMvpActivity<MainContract.View,
         rvGameList.adapter = adapter
     }
 
-
-    private fun invites() {
-
-        val appLinkData = intent.data
-
-        if(appLinkData != null){
-            val uriString = appLinkData.toString()
-            val uri = Uri.parse(uriString)
-
-            val gameKey = uri.getQueryParameter("key")
-            toast(gameKey).show()
-        }
-
-    }
 
     override fun showCurrentUser(user: String) {
         tvCurrentUser.text=user

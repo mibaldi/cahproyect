@@ -26,7 +26,5 @@ abstract class BaseMvpFragment<in V : BaseMvpFragmentView, T : BaseMvpFragmentPr
         super.onDestroy()
         mPresenter.detachView()
     }
-
-
 }
 

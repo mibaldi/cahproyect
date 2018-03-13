@@ -5,8 +5,6 @@ import com.mibaldi.cah.base.presenters.activities.BaseMvpPresenter
 import com.mibaldi.cah.base.views.BaseMvpView
 import com.mibaldi.cah.ui.activities.MainActivity
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 
 @Suppress("UNCHECKED_CAST")

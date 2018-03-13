@@ -10,6 +10,7 @@ import com.mibaldi.cah.ui.presenters.configuration.ConfigurationPresenter
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.ConfigurationContract
 import com.mibaldi.cah.utils.ViewModelFactory
+import kotlinx.android.synthetic.main.actionbar_toolbar.*
 import kotlinx.android.synthetic.main.activity_configuration.*
 import org.jetbrains.anko.design.longSnackbar
 import org.jetbrains.anko.design.snackbar

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -22,10 +23,12 @@ import com.mibaldi.cah.ui.views.GameContract
 import com.mibaldi.cah.utils.ViewModelFactory
 import com.mibaldi.cah.utils.addFragment
 import com.mibaldi.cah.utils.replaceFragment
+import kotlinx.android.synthetic.main.actionbar_toolbar.*
 import kotlinx.android.synthetic.main.activity_game.*
 import org.jetbrains.anko.design.longSnackbar
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.progressDialog
+import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 class GameActivity : BaseMvpActivity<GameContract.View,
@@ -47,6 +50,7 @@ class GameActivity : BaseMvpActivity<GameContract.View,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        invites()
         setupToolbar()
         model = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
 
@@ -58,6 +62,20 @@ class GameActivity : BaseMvpActivity<GameContract.View,
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
+
+    private fun invites() {
+
+        val appLinkData = intent.data
+
+        if(appLinkData != null){
+            val uriString = appLinkData.toString()
+            val uri = Uri.parse(uriString)
+
+            val gameKey = uri.getQueryParameter("key")
+            toast(gameKey).show()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

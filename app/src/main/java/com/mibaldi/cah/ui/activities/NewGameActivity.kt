@@ -9,6 +9,7 @@ import com.mibaldi.cah.ui.presenters.newGame.NewGamePresenter
 import com.mibaldi.cah.ui.viewModels.MainViewModel
 import com.mibaldi.cah.ui.views.NewGameContract
 import com.mibaldi.cah.utils.ViewModelFactory
+import kotlinx.android.synthetic.main.actionbar_toolbar.*
 import kotlinx.android.synthetic.main.activity_newgame.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.design.longSnackbar

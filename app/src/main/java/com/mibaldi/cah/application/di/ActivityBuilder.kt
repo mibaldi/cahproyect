@@ -1,11 +1,8 @@
 package com.mibaldi.cah.application.di
 
 
-import com.mibaldi.cah.ui.activities.ConfigurationActivity
-import com.mibaldi.cah.ui.activities.GameActivity
+import com.mibaldi.cah.ui.activities.*
 import dagger.Module
-import com.mibaldi.cah.ui.activities.MainActivity
-import com.mibaldi.cah.ui.activities.NewGameActivity
 import com.mibaldi.cah.ui.fragments.di.GameFragmentsProvider
 import com.mibaldi.cah.ui.presenters.configuration.ConfigurationModule
 import com.mibaldi.cah.ui.presenters.game.GameModule

@@ -12,7 +12,6 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class Router @Inject constructor(val applicationContext: Context) {
 
@@ -40,12 +39,27 @@ class Router @Inject constructor(val applicationContext: Context) {
 
     fun inviteGame(activity: GameActivity, deepLink: Uri) {
         with(activity) {
-            val sendIntent = Intent()
             val msg = "Te invito a jugar: $deepLink"
-            sendIntent.action = Intent.ACTION_SEND
-            sendIntent.putExtra(Intent.EXTRA_TEXT, msg)
-            sendIntent.type = "text/plain"
-            startActivity(sendIntent)
+
+            val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"))
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject")
+            emailIntent.putExtra(Intent.EXTRA_TEXT, msg)
+
+            val whatsappIntent = Intent(Intent.ACTION_SEND)
+            whatsappIntent.type = "text/plain"
+            whatsappIntent.`package` = "com.whatsapp"
+            whatsappIntent.putExtra(Intent.EXTRA_TEXT, msg)
+
+            val uri = Uri.parse("smsto:")
+            val smsIntent = Intent(Intent.ACTION_SENDTO, uri)
+            smsIntent.putExtra("sms_body", msg)
+
+            val chooserIntent = Intent.createChooser(Intent(), "Elige una opción")
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(whatsappIntent, emailIntent, smsIntent))
+
+
+            startActivity(chooserIntent)
+
         }
     }
 
